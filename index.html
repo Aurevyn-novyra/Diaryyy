@@ -1,20 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta name="description" content="Premium Luxury Diary with extreme realism and unlimited customization" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Premium Luxury Diary with extreme realism and unlimited customization">
     <title>Luxury Diary - Extreme Edition</title>
-
-    <!-- Libraries -->
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@400;500;600;700&family=Cinzel:wght@400;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
-
+    
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@400;500;600;700&family=Cinzel:wght@400;600;700&family=Libre+Baskerville:wght@400;700&display=swap');
+
         :root {
             --gold-dark: #d4a574;
             --gold-light: #f4e4c1;
@@ -24,7 +22,7 @@
             --cream: #fefdfb;
             --charcoal: #1a1a1a;
             --black-luxe: #0f0f0f;
-
+            
             --font-serif: 'Playfair Display', serif;
             --font-elegant: 'Cormorant Garamond', serif;
             --font-cinzel: 'Cinzel', serif;
@@ -32,667 +30,3514 @@
             --font-sans: 'Inter', sans-serif;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body { height: 100%; width: 100%; overflow: hidden; font-family: var(--font-sans); background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%); color: var(--charcoal); -webkit-font-smoothing: antialiased; perspective: 1200px; }
-
-        /* LANDING */
-        #landing{ position: fixed; inset:0; display:flex; align-items:center; justify-content:center; background: radial-gradient(ellipse at center, #2a2a3a 0%, #0f0f1a 100%); z-index:1000; flex-direction:column; transition: opacity .8s ease; }
-        #landing.hidden{ pointer-events:none; opacity:0; }
-        .landing-content{ text-align:center; color:white; padding:3rem; border-radius:16px; border:1px solid rgba(212,165,116,0.25); background: rgba(0,0,0,0.35); backdrop-filter: blur(6px); }
-        .landing-icon{ font-size:4rem; margin-bottom:1rem; }
-        .landing-title{ font-family:var(--font-serif); font-size:2.2rem; background:linear-gradient(135deg,var(--gold-light),var(--gold-dark)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:.5rem; }
-        .landing-subtitle{ font-family:var(--font-elegant); color:rgba(244,228,193,.85); margin-bottom:1.5rem; }
-        .landing-btn{ padding: .9rem 2rem; border-radius:40px; border:2px solid var(--gold-dark); background:linear-gradient(135deg,var(--gold-dark),var(--gold-light)); color:var(--black-luxe); cursor:pointer; font-weight:700; }
-
-        /* APP */
-        #app{ display:none; width:100%; height:100%; position:relative; overflow:hidden; }
-        .book-viewer{ width:100%; height:100%; display:flex; align-items:center; justify-content:center; perspective:1500px; position:relative; }
-
-        .book-3d-container{ width:600px; height:800px; max-width:90%; max-height:90vh; position:relative; transform-style:preserve-3d; }
-
-        .book-cover{
-            width:100%; height:100%; border-radius:12px; position:absolute; display:flex; align-items:center; justify-content:center; flex-direction:column; padding:40px; text-align:center; color:white; z-index:10;
-            background: linear-gradient(135deg,#4a3f35 0%, #3d3530 50%, #2d2620 100%); cursor:pointer; box-shadow: 0 30px 100px rgba(0,0,0,.6), 0 0 60px rgba(212,165,116,.12); transform-style:preserve-3d;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .cover-emboss{ font-family:var(--font-serif); font-size:2.6rem; font-weight:900; letter-spacing:2px; background:linear-gradient(135deg,var(--gold-light),var(--gold-dark)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; z-index:4;}
-        .cover-subtitle{ font-family:var(--font-elegant); margin-top:10px; color:var(--gold-light); z-index:4; }
 
-        .book-pages{ width:100%; height:100%; position:absolute; border-radius:12px; overflow:hidden; background:transparent; display:none; transform-style:preserve-3d; z-index:5; }
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+            font-family: var(--font-sans);
+            color: var(--charcoal);
+            -webkit-font-smoothing: antialiased;
+            perspective: 1200px;
+        }
 
-        .book-pages.show{ display:block; }
+        /* ========== LANDING ========== */
+        #landing {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(ellipse at center, #2a2a3a 0%, #0f0f1a 100%);
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 0.8s ease-out;
+            flex-direction: column;
+        }
 
-        .pages-container{ width:100%; height:100%; position:relative; }
+        #landing.hidden {
+            pointer-events: none;
+            opacity: 0;
+        }
 
-        /* realistic paper */
-        .page-background{ position:absolute; inset:0; border-radius:8px; background:linear-gradient(135deg,#fefdfb,#f9f7f5); box-shadow: 0 30px 80px rgba(0,0,0,.35); z-index:0; }
+        #starfieldContainer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
 
-        .page-binding{ position:absolute; left:0; top:0; width:20px; height:100%; background:linear-gradient(90deg,#3d3530,#2d2620); z-index:6; }
+        .landing-content {
+            text-align: center;
+            color: white;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+            padding: 4rem;
+            border-radius: 20px;
+            border: 1px solid rgba(212, 165, 116, 0.3);
+            background: rgba(0, 0, 0, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
 
-        .page-canvas-wrapper{ position:relative; left:20px; top:0; width:calc(100% - 20px); height:100%; border-radius:0 8px 8px 0; overflow:hidden; }
-        #pageCanvas{ display:block; width:100%; height:100%; touch-action:none; cursor:crosshair; background:transparent; }
+        .landing-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: floatIn 1s ease-out 0.2s forwards;
+        }
 
-        .page-text-layer{ position:absolute; top:40px; left:60px; right:40px; bottom:60px; font-size:1rem; line-height:1.7; color:var(--charcoal); overflow-y:auto; white-space:pre-wrap; font-family:var(--font-elegant); z-index:8; background:transparent; outline:none; }
+        @keyframes floatIn {
+            from { opacity: 0; transform: translateY(30px) scale(0.8); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
 
-        .page-number{ position:absolute; right:35px; bottom:30px; font-family:var(--font-serif); color:var(--gold-dark); font-weight:700; z-index:9; }
+        .landing-title {
+            font-family: var(--font-serif);
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.3s forwards;
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-        .page-flip-zone{ position:absolute; right:0; bottom:0; width:160px; height:160px; cursor:grab; z-index:20; background:transparent; }
+        .landing-subtitle {
+            font-family: var(--font-elegant);
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            opacity: 0;
+            color: rgba(244, 228, 193, 0.8);
+            animation: fadeInUp 0.8s ease-out 0.5s forwards;
+            letter-spacing: 1px;
+            font-weight: 400;
+        }
 
-        /* toolbar */
-        .toolbar{ position:fixed; bottom:25px; left:50%; transform:translateX(-50%); padding:.9rem 1.6rem; display:flex; gap:.75rem; border-radius:50px; background:linear-gradient(135deg, rgba(42,37,32,0.95), rgba(31,26,21,0.95)); border:1.5px solid rgba(212,165,116,.25); z-index:60; }
-        .toolbar-btn{ padding:.5rem .9rem; border-radius:6px; background:rgba(212,165,116,.06); border:1px solid rgba(212,165,116,.18); color:var(--gold-light); cursor:pointer; font-weight:600; }
-        .toolbar input[type="color"]{ padding:0; border-radius:6px; width:40px; height:36px; border:1px solid rgba(212,165,116,.18); cursor:pointer; }
+        .landing-btn {
+            font-family: var(--font-serif);
+            padding: 1.2rem 3.5rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border: 2px solid var(--gold-dark);
+            border-radius: 50px;
+            background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-light) 100%);
+            color: var(--black-luxe);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 15px 40px rgba(212, 165, 116, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.7s forwards;
+            letter-spacing: 1.5px;
+            position: relative;
+            overflow: hidden;
+        }
 
-        /* sidebar */
-        .sidebar{ position:fixed; left:0; top:0; width:320px; height:100%; background:linear-gradient(180deg,#2a2520,#1f1a15); transform:translateX(-100%); transition:transform .45s; z-index:100; padding:1rem; display:flex; flex-direction:column; gap:1rem; }
-        .sidebar.open{ transform:translateX(0); }
-        .sidebar-header{ display:flex; justify-content:space-between; align-items:center; padding:.5rem 0; color:var(--gold-light); font-family:var(--font-serif); font-weight:700; }
-        .page-item{ padding:.9rem; border-radius:8px; cursor:pointer; background:linear-gradient(135deg, rgba(212,165,116,.04), rgba(212,165,116,.02)); border:1px solid rgba(212,165,116,.08); }
-        .sidebar-actions{ display:flex; gap:.6rem; flex-direction:column; }
+        .landing-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
 
-        .return-cover-btn{ position:fixed; top:20px; left:20px; width:52px; height:52px; border-radius:50%; display:none; align-items:center; justify-content:center; z-index:102; cursor:pointer; background:linear-gradient(135deg,var(--gold-dark),var(--gold-light)); color:var(--black-luxe); font-weight:700; border:none; }
-        .return-cover-btn.show{ display:flex; }
+        .landing-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
 
-        /* small screens */
-        @media (max-width:700px){
-            .book-3d-container{ width:320px; height:450px; }
-            .landing-title{ font-size:1.5rem; }
-            .landing-content{ padding:2rem; }
-            .sidebar{ width:260px; }
+        .landing-btn:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 25px 60px rgba(212, 165, 116, 0.5);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ========== MAIN APP ========== */
+        #app {
+            width: 100%;
+            height: 100%;
+            display: none;
+            background: linear-gradient(135deg, #2a2a3a 0%, #1a1a1a 50%, #252535 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ========== BOOK VIEWER ========== */
+        .book-viewer {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1500px;
+            position: relative;
+        }
+
+        .book-3d-container {
+            perspective: 1500px;
+            transform-style: preserve-3d;
+            position: relative;
+            width: 600px;
+            height: 800px;
+            max-width: 90%;
+            max-height: 90vh;
+            filter: drop-shadow(0 40px 120px rgba(0, 0, 0, 0.7)) drop-shadow(0 0 100px rgba(212, 165, 116, 0.15));
+        }
+
+        .book-cover {
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            position: absolute;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 40px;
+            text-align: center;
+            color: white;
+            opacity: 1;
+            z-index: 10;
+            overflow: hidden;
+            background: linear-gradient(135deg, #4a3f35 0%, #3d3530 50%, #2d2620 100%);
+            transform-style: preserve-3d;
+            box-shadow: 
+                0 30px 100px rgba(0, 0, 0, 0.6),
+                0 0 60px rgba(212, 165, 116, 0.15),
+                inset -3px -3px 15px rgba(0, 0, 0, 0.4),
+                inset 3px 3px 15px rgba(255, 255, 255, 0.08),
+                inset -1px -1px 2px rgba(0, 0, 0, 0.8),
+                inset 1px 1px 2px rgba(255, 255, 255, 0.15);
+        }
+
+        /* REALISTIC LEATHER TEXTURES */
+        .book-cover::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(
+                    90deg,
+                    transparent 0px,
+                    transparent 2px,
+                    rgba(255, 255, 255, 0.03) 2px,
+                    rgba(255, 255, 255, 0.03) 4px
+                ),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent 0px,
+                    transparent 1px,
+                    rgba(0, 0, 0, 0.05) 1px,
+                    rgba(0, 0, 0, 0.05) 2px
+                ),
+                radial-gradient(
+                    circle at 20% 80%,
+                    rgba(255, 255, 255, 0.1) 0%,
+                    transparent 50%
+                ),
+                radial-gradient(
+                    circle at 80% 20%,
+                    rgba(0, 0, 0, 0.15) 0%,
+                    transparent 50%
+                );
+            pointer-events: none;
+            border-radius: 12px;
+            z-index: 2;
+        }
+
+        .book-cover::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, transparent 50%, rgba(0, 0, 0, 0.12) 100%);
+            border-radius: 12px;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .cover-emboss {
+            position: relative;
+            z-index: 4;
+            font-family: var(--font-serif);
+            font-size: 3.5rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-dark) 50%, #c9a066 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.6)) drop-shadow(1px 1px 2px rgba(255, 255, 255, 0.2));
+            text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.7);
+        }
+
+        .cover-subtitle {
+            font-family: var(--font-elegant);
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            margin-top: 1.5rem;
+            color: var(--gold-light);
+            opacity: 0.95;
+            position: relative;
+            z-index: 4;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+        }
+
+        .cover-decoration {
+            position: absolute;
+            z-index: 4;
+            opacity: 0.7;
+        }
+
+        .corner-ornament {
+            width: 80px;
+            height: 80px;
+            border: 2px solid var(--gold-dark);
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .top-left-corner {
+            top: 20px;
+            left: 20px;
+            border-right: none;
+            border-bottom: none;
+            border-radius: 8px 0 0 0;
+        }
+
+        .top-right-corner {
+            top: 20px;
+            right: 20px;
+            border-left: none;
+            border-bottom: none;
+            border-radius: 0 8px 0 0;
+        }
+
+        .bottom-left-corner {
+            bottom: 20px;
+            left: 20px;
+            border-right: none;
+            border-top: none;
+            border-radius: 0 0 0 8px;
+        }
+
+        .bottom-right-corner {
+            bottom: 20px;
+            right: 20px;
+            border-left: none;
+            border-top: none;
+            border-radius: 0 0 8px 0;
+        }
+
+        .back-cover {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(245, 243, 240, 0.97) 100%);
+            backface-visibility: hidden;
+            transform: rotateY(180deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--charcoal);
+            font-family: var(--font-elegant);
+            font-size: 1.1rem;
+            opacity: 0.95;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-cover::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 1px,
+                    rgba(212, 165, 116, 0.02) 1px,
+                    rgba(212, 165, 116, 0.02) 2px
+                ),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 1px,
+                    rgba(212, 165, 116, 0.01) 1px,
+                    rgba(212, 165, 116, 0.01) 2px
+                );
+            border-radius: 12px;
+            pointer-events: none;
+        }
+
+        .book-cover:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 
+                0 40px 120px rgba(0, 0, 0, 0.7),
+                0 0 80px rgba(212, 165, 116, 0.25);
+        }
+
+        .book-cover.flipping {
+            cursor: grabbing;
+        }
+
+        .book-pages {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform-style: preserve-3d;
+        }
+
+        .book-pages.show {
+            opacity: 1;
+            pointer-events: auto;
+            z-index: 10;
+        }
+
+        .pages-container {
+            width: 100%;
+            height: 100%;
+            perspective: 1500px;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        /* REALISTIC PAPER */
+        .page-background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #fefdfb 0%, #f9f7f5 50%, #fefdfb 100%);
+            border-radius: 8px;
+            box-shadow: 
+                0 30px 80px rgba(0, 0, 0, 0.4),
+                inset -2px 0 8px rgba(0, 0, 0, 0.08),
+                inset 2px 0 8px rgba(255, 255, 255, 0.4),
+                inset 0 1px 3px rgba(0, 0, 0, 0.05);
+            z-index: -1;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .page-background::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(200, 180, 160, 0.008) 2px,
+                    rgba(200, 180, 160, 0.008) 4px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 1px,
+                    rgba(200, 180, 160, 0.004) 1px,
+                    rgba(200, 180, 160, 0.004) 2px
+                ),
+                radial-gradient(
+                    ellipse 400px 300px at 20% 30%,
+                    rgba(255, 255, 255, 0.15) 0%,
+                    transparent 50%
+                );
+            pointer-events: none;
+            border-radius: 8px;
+        }
+
+        /* PAGE BINDING */
+        .page-binding {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 20px;
+            height: 100%;
+            background: linear-gradient(90deg, #3d3530 0%, #2d2620 50%, #1a1a1a 100%);
+            z-index: 5;
+            box-shadow: 
+                inset -1px 0 3px rgba(255, 255, 255, 0.2),
+                inset 1px 0 3px rgba(0, 0, 0, 0.5),
+                0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .page-binding::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 3px,
+                rgba(255, 255, 255, 0.08) 3px,
+                rgba(255, 255, 255, 0.08) 4px
+            );
+        }
+
+        .page-canvas-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            border-radius: 0 8px 8px 0;
+            perspective: 1500px;
+            transform-style: preserve-3d;
+        }
+
+        #pageCanvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+            border-radius: 0 4px 4px 0;
+            touch-action: none;
+        }
+
+        .page-text-layer {
+            position: absolute;
+            top: 40px;
+            left: 60px;
+            right: 40px;
+            bottom: 60px;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: var(--charcoal);
+            overflow-y: auto;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            font-family: var(--font-elegant);
+            padding: 0;
+            margin: 0;
+            background: transparent;
+            z-index: 5;
+            font-weight: 400;
+        }
+
+        .page-text-layer:focus {
+            outline: none;
+        }
+
+        .page-edge {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 165, 116, 0.3));
+            pointer-events: none;
+        }
+
+        .page-number {
+            position: absolute;
+            bottom: 30px;
+            right: 35px;
+            font-size: 0.95rem;
+            color: var(--gold-dark);
+            font-weight: 700;
+            opacity: 0;
+            animation: slideInUp 0.5s ease-out 0.3s forwards;
+            font-family: var(--font-serif);
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page-flip-zone {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            cursor: grab;
+            z-index: 20;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 0 8px 0 0;
+        }
+
+        .page-flip-zone:hover {
+            opacity: 0.3;
+            background: radial-gradient(circle at top-left, rgba(212, 165, 116, 0.3), transparent 70%);
+        }
+
+        .page-flip-corner {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, transparent 50%, var(--gold-dark) 50%);
+            border-radius: 0 8px 0 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            box-shadow: -2px -2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .page-flip-zone:hover .page-flip-corner {
+            opacity: 0.7;
+        }
+
+        /* ========== RETURN TO COVER BUTTON ========== */
+        .return-cover-btn {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-light) 100%);
+            border: none;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 102;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 8px 20px rgba(212, 165, 116, 0.3);
+            color: var(--black-luxe);
+            font-weight: 700;
+        }
+
+        .return-cover-btn.show {
+            display: flex;
+        }
+
+        .return-cover-btn:hover {
+            transform: scale(1.12) rotate(-10deg);
+            box-shadow: 0 12px 30px rgba(212, 165, 116, 0.4);
+        }
+
+        /* ========== SIDEBAR ========== */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 320px;
+            height: 100%;
+            background: linear-gradient(180deg, #2a2520 0%, #1f1a15 100%);
+            border-right: 1px solid rgba(212, 165, 116, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            box-shadow: 3px 0 15px rgba(0, 0, 0, 0.3);
+            transform: translateX(-100%);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 100;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: rgba(212, 165, 116, 0.1);
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--gold-dark);
+            border-radius: 3px;
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .sidebar-toggle {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-light) 100%);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 101;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 8px 20px rgba(212, 165, 116, 0.3);
+            color: var(--black-luxe);
+            font-weight: 700;
+        }
+
+        .sidebar-toggle:hover {
+            transform: scale(1.12) rotate(10deg);
+            box-shadow: 0 12px 30px rgba(212, 165, 116, 0.4);
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(212, 165, 116, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-title {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+
+        .sidebar-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gold-dark);
+            padding: 0;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-close:hover {
+            transform: rotate(90deg) scale(1.2);
+            background: rgba(212, 165, 116, 0.1);
+            border-radius: 50%;
+        }
+
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .page-item {
+            padding: 1.2rem;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, rgba(212, 165, 116, 0.05) 0%, rgba(212, 165, 116, 0.02) 100%);
+            border: 1px solid rgba(212, 165, 116, 0.15);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            user-select: none;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .page-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .page-item:hover::before {
+            left: 100%;
+        }
+
+        .page-item:hover {
+            background: linear-gradient(135deg, rgba(212, 165, 116, 0.12) 0%, rgba(212, 165, 116, 0.05) 100%);
+            transform: translateX(8px);
+            border-color: var(--gold-dark);
+            box-shadow: 0 4px 12px rgba(212, 165, 116, 0.15);
+        }
+
+        .page-item.active {
+            background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-light) 100%);
+            color: var(--black-luxe);
+            border-color: var(--gold-dark);
+            box-shadow: 0 6px 20px rgba(212, 165, 116, 0.3);
+            font-weight: 600;
+        }
+
+        .page-item-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.35rem;
+            font-family: var(--font-serif);
+        }
+
+        .page-item-date {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .sidebar-actions {
+            padding: 1.5rem;
+            border-top: 1px solid rgba(212, 165, 116, 0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .action-btn {
+            padding: 0.9rem 1.2rem;
+            border: 1.5px solid rgba(212, 165, 116, 0.4);
+            background: rgba(212, 165, 116, 0.05);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            color: var(--gold-light);
+            position: relative;
+            overflow: hidden;
+            font-family: var(--font-sans);
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: var(--gold-dark);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+            z-index: -1;
+        }
+
+        .action-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .action-btn:hover {
+            color: var(--black-luxe);
+            border-color: var(--gold-dark);
+            box-shadow: 0 6px 16px rgba(212, 165, 116, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* ========== TOOLBAR ========== */
+        .toolbar {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            height: auto;
+            background: linear-gradient(135deg, rgba(42, 37, 32, 0.95) 0%, rgba(31, 26, 21, 0.95) 100%);
+            border: 1.5px solid rgba(212, 165, 116, 0.3);
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            padding: 0.9rem 1.8rem;
+            gap: 1rem;
+            box-shadow: 
+                0 12px 40px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(212, 165, 116, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            z-index: 50;
+            backdrop-filter: blur(10px);
+            animation: slideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateX(-50%) translateY(40px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        .toolbar-group {
+            display: flex;
+            gap: 0.6rem;
+            align-items: center;
+            padding: 0 0.8rem;
+        }
+
+        .toolbar-separator {
+            width: 1px;
+            height: 32px;
+            background: rgba(212, 165, 116, 0.2);
+            margin: 0 0.4rem;
+        }
+
+        .toolbar-btn {
+            padding: 0.6rem 1.1rem;
+            border: 1.5px solid rgba(212, 165, 116, 0.3);
+            background: rgba(212, 165, 116, 0.08);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            color: var(--gold-light);
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+            font-family: var(--font-sans);
+        }
+
+        .toolbar-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gold-dark);
+            z-index: -1;
+            transition: left 0.4s ease;
+        }
+
+        .toolbar-btn:hover::before {
+            left: 0;
+        }
+
+        .toolbar-btn:hover {
+            color: var(--black-luxe);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(212, 165, 116, 0.2);
+        }
+
+        .toolbar-btn.active {
+            background: var(--gold-dark);
+            color: var(--black-luxe);
+            border-color: var(--gold-dark);
+        }
+
+        input[type="color"] {
+            width: 38px;
+            height: 38px;
+            border: 1.5px solid rgba(212, 165, 116, 0.3);
+            border-radius: 6px;
+            cursor: pointer;
+            padding: 2px;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+
+        input[type="color"]:hover {
+            transform: scale(1.12);
+            box-shadow: 0 4px 12px rgba(212, 165, 116, 0.2);
+        }
+
+        input[type="range"] {
+            width: 110px;
+            cursor: pointer;
+            accent-color: var(--gold-dark);
+        }
+
+        select {
+            padding: 0.5rem 0.9rem;
+            border: 1.5px solid rgba(212, 165, 116, 0.3);
+            border-radius: 6px;
+            background: rgba(212, 165, 116, 0.08);
+            color: var(--gold-light);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: var(--font-sans);
+        }
+
+        select:hover {
+            border-color: var(--gold-dark);
+            box-shadow: 0 4px 12px rgba(212, 165, 116, 0.15);
+        }
+
+        /* Sound Toggle */
+        .sound-toggle {
+            position: fixed;
+            bottom: 100px;
+            right: 25px;
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-light) 100%);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 101;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(212, 165, 116, 0.3);
+            color: var(--black-luxe);
+            font-weight: 700;
+        }
+
+        .sound-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .sound-toggle.muted {
+            opacity: 0.5;
+        }
+
+        /* ========== LIBRARY VIEW ========== */
+        #libraryView {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2a2520 0%, #1f1a15 100%);
+            display: none;
+            flex-direction: column;
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        #libraryView.active {
+            display: flex;
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .library-header {
+            padding: 2.5rem;
+            border-bottom: 1px solid rgba(212, 165, 116, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .library-title {
+            font-family: var(--font-serif);
+            font-size: 2.2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .library-close {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--gold-dark);
+            padding: 0;
+            transition: all 0.3s ease;
+        }
+
+        .library-close:hover {
+            transform: rotate(90deg) scale(1.2);
+        }
+
+        .library-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 3rem;
+        }
+
+        .library-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .page-thumbnail {
+            aspect-ratio: 3/4;
+            border: 2px solid rgba(212, 165, 116, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: linear-gradient(135deg, rgba(212, 165, 116, 0.05), rgba(212, 165, 116, 0.02));
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .page-thumbnail:hover {
+            transform: translateY(-16px) rotateX(8deg) rotateY(-5deg);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), 0 0 30px rgba(212, 165, 116, 0.2);
+            border-color: var(--gold-dark);
+        }
+
+        .page-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .page-thumbnail-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+            padding: 1.2rem;
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+            font-family: var(--font-serif);
+        }
+
+        /* ========== STATUS INDICATOR ========== */
+        .status-indicator {
+            position: fixed;
+            bottom: 110px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-light) 100%);
+            color: var(--black-luxe);
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 12px 30px rgba(212, 165, 116, 0.4);
+            z-index: 45;
+            font-family: var(--font-serif);
+            letter-spacing: 1px;
+        }
+
+        .status-indicator.visible {
+            opacity: 1;
+            pointer-events: auto;
+            animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes popIn {
+            0% { transform: translateX(-50%) scale(0.8); opacity: 0; }
+            100% { transform: translateX(-50%) scale(1); opacity: 1; }
+        }
+
+        /* ========== MODAL ========== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 300;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #3d3530 0%, #2d2620 100%);
+            border: 1px solid rgba(212, 165, 116, 0.3);
+            border-radius: 16px;
+            padding: 2.5rem;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 
+                0 25px 70px rgba(0, 0, 0, 0.4),
+                0 0 40px rgba(212, 165, 116, 0.1);
+            animation: slideInDown 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes slideInDown {
+            from { opacity: 0; transform: translateY(-40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-title {
+            font-family: var(--font-serif);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 0.9rem;
+            border: 1.5px solid rgba(212, 165, 116, 0.3);
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            color: var(--gold-light);
+            background: rgba(212, 165, 116, 0.08);
+            font-family: var(--font-sans);
+            transition: all 0.3s ease;
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: var(--gold-dark);
+            box-shadow: 0 0 0 4px rgba(212, 165, 116, 0.15);
+            transform: scale(1.01);
+        }
+
+        .modal-input::placeholder {
+            color: rgba(212, 165, 116, 0.5);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1.2rem;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 0.9rem 2rem;
+            border: 1.5px solid rgba(212, 165, 116, 0.3);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-family: var(--font-serif);
+        }
+
+        .modal-btn-primary {
+            background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-light) 100%);
+            color: var(--black-luxe);
+            border-color: var(--gold-dark);
+        }
+
+        .modal-btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(212, 165, 116, 0.3);
+        }
+
+        .modal-btn-secondary {
+            background: rgba(212, 165, 116, 0.08);
+            color: var(--gold-light);
+        }
+
+        .modal-btn-secondary:hover {
+            background: rgba(212, 165, 116, 0.15);
+            transform: translateY(-3px);
+        }
+
+        /* ========== COVER CUSTOMIZER ========== */
+        .cover-customizer {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 400;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+            overflow-y: auto;
+        }
+
+        .cover-customizer.active {
+            display: flex;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .customizer-panel {
+            background: linear-gradient(135deg, #3d3530 0%, #2d2620 100%);
+            border: 1px solid rgba(212, 165, 116, 0.3);
+            border-radius: 16px;
+            padding: 2.5rem;
+            max-width: 1200px;
+            width: 95%;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 3rem;
+            max-height: 95vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5);
+            margin: auto;
+        }
+
+        .customizer-preview {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: sticky;
+            top: 0;
+        }
+
+        .preview-book {
+            width: 220px;
+            height: 310px;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preview-book::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 1px,
+                    rgba(255, 255, 255, 0.02) 1px,
+                    rgba(255, 255, 255, 0.02) 2px
+                ),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 1px,
+                    rgba(0, 0, 0, 0.03) 1px,
+                    rgba(0, 0, 0, 0.03) 2px
+                );
+            border-radius: 8px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .preview-book-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .customizer-controls {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            overflow-y: auto;
+            max-height: 95vh;
+            padding-right: 1rem;
+        }
+
+        .control-section {
+            border: 1px solid rgba(212, 165, 116, 0.15);
+            border-radius: 8px;
+            padding: 1.5rem;
+            background: rgba(212, 165, 116, 0.03);
+        }
+
+        .section-title {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            color: var(--gold-light);
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .control-label {
+            font-family: var(--font-serif);
+            font-size: 0.9rem;
+            color: var(--gold-light);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .control-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 0.6rem;
+        }
+
+        .color-option {
+            padding: 0.8rem;
+            border: 2px solid rgba(212, 165, 116, 0.2);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(212, 165, 116, 0.05);
+            color: var(--gold-light);
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-align: center;
+        }
+
+        .color-option:hover {
+            border-color: var(--gold-dark);
+            background: rgba(212, 165, 116, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .color-option.active {
+            border-color: var(--gold-dark);
+            background: rgba(212, 165, 116, 0.25);
+            box-shadow: 0 0 12px rgba(212, 165, 116, 0.3);
+        }
+
+        .color-swatch {
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .text-input-group {
+            display: flex;
+            gap: 0.6rem;
+        }
+
+        .text-input-group input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 1.5px solid rgba(212, 165, 116, 0.2);
+            border-radius: 6px;
+            background: rgba(212, 165, 116, 0.05);
+            color: var(--gold-light);
+            font-family: var(--font-sans);
+            transition: all 0.3s ease;
+        }
+
+        .text-input-group input:focus {
+            outline: none;
+            border-color: var(--gold-dark);
+            box-shadow: 0 0 8px rgba(212, 165, 116, 0.2);
+        }
+
+        .text-input-group input::placeholder {
+            color: rgba(212, 165, 116, 0.4);
+        }
+
+        .customizer-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 1.2rem;
+            justify-content: flex-end;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(212, 165, 116, 0.15);
+        }
+
+        .option-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .slider-control {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .slider-control input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+            accent-color: var(--gold-dark);
+        }
+
+        .slider-value {
+            font-size: 0.85rem;
+            color: var(--gold-dark);
+            font-weight: 600;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 1024px) {
+            .customizer-panel {
+                grid-template-columns: 1fr;
+            }
+
+            .customizer-preview {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .book-3d-container {
+                width: 95%;
+                height: auto;
+                aspect-ratio: 3/4;
+            }
+
+            .toolbar {
+                width: 95%;
+                bottom: 10px;
+                padding: 0.6rem 1rem;
+                gap: 0.4rem;
+            }
+
+            .toolbar-btn {
+                padding: 0.4rem 0.7rem;
+                font-size: 0.75rem;
+            }
+
+            .landing-title {
+                font-size: 2rem;
+            }
+
+            .customizer-panel {
+                max-width: 100%;
+                padding: 1.5rem;
+            }
+
+            .control-options {
+                grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+            }
+
+            .option-row {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- LANDING -->
+    <!-- LANDING SCREEN -->
     <div id="landing">
-        <canvas id="starfield" width="800" height="600" style="position:absolute; inset:0; width:100%; height:100%; z-index:-1;"></canvas>
-        <div class="landing-content" role="dialog" aria-modal="true">
-            <div class="landing-icon">📔</div>
-            <div class="landing-title">Luxury Diary — Extreme Edition</div>
-            <div class="landing-subtitle">Premium realism, unlimited customization</div>
-            <button class="landing-btn" id="enterBtn" aria-label="Enter diary">Enter</button>
+        <div id="starfieldContainer">
+            <canvas id="starfield"></canvas>
+        </div>
+        <div class="landing-content">
+            <div class="landing-icon">📖</div>
+            <h1 class="landing-title">MEMENTO</h1>
+            <p class="landing-subtitle">Ultimate Luxury Diary Experience</p>
+            <button class="landing-btn" id="enterBtn">ENTER YOUR SANCTUARY ✨</button>
         </div>
     </div>
 
-    <!-- APP -->
-    <div id="app" aria-hidden="true">
-        <button class="return-cover-btn" id="backToCoverBtn" title="Return to cover">◀</button>
+    <!-- MAIN APP -->
+    <div id="app">
+        <!-- RETURN TO COVER BUTTON -->
+        <button class="return-cover-btn" id="returnCoverBtn" title="Return to cover">📖</button>
 
-        <div class="sidebar" id="sidebar" aria-hidden="true">
+        <!-- SIDEBAR -->
+        <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <div>Pages</div>
-                <button id="closeSidebar" title="Close sidebar" style="background:none;border:none;color:var(--gold-light);cursor:pointer;font-size:1.1rem;">✕</button>
+                <div class="sidebar-title">📖 Pages</div>
+                <button class="sidebar-close" id="sidebarClose">✕</button>
             </div>
-            <div id="pageList" style="overflow:auto; flex:1;"></div>
+            <div class="sidebar-content" id="pageList"></div>
             <div class="sidebar-actions">
-                <button class="toolbar-btn" id="addPageBtn">+ New Page</button>
-                <button class="toolbar-btn" id="deletePageBtn">Delete Page</button>
-                <button class="toolbar-btn" id="downloadPdfBtn">Export current page as PDF</button>
+                <button class="action-btn" id="newPageBtn">✨ New Page</button>
+                <button class="action-btn" id="customizeBtn">🎨 Cover</button>
+                <button class="action-btn" id="libraryBtn">📚 Library</button>
+                <button class="action-btn" id="exportPdfBtn">📄 PDF</button>
+                <button class="action-btn" id="exportJsonBtn">💾 Backup</button>
+                <button class="action-btn" id="importJsonBtn">📂 Import</button>
             </div>
         </div>
 
-        <div class="book-viewer" role="main">
-            <div class="book-3d-container" id="bookContainer" aria-live="polite">
-                <div class="book-cover" id="bookCover" role="button" tabindex="0" aria-label="Open book">
-                    <div class="cover-emboss">Luxury Diary</div>
-                    <div class="cover-subtitle">Extreme Edition</div>
+        <!-- SIDEBAR TOGGLE -->
+        <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+
+        <!-- SOUND TOGGLE -->
+        <button class="sound-toggle" id="soundToggle">🔊</button>
+
+        <!-- BOOK VIEWER -->
+        <div class="book-viewer">
+            <div class="book-3d-container" id="book3dContainer">
+                <!-- FRONT COVER -->
+                <div class="book-cover" id="bookCover">
+                    <div class="cover-decoration corner-ornament top-left-corner"></div>
+                    <div class="cover-decoration corner-ornament top-right-corner"></div>
+                    <div class="cover-decoration corner-ornament bottom-left-corner"></div>
+                    <div class="cover-decoration corner-ornament bottom-right-corner"></div>
+                    
+                    <div class="cover-emboss" id="coverEmboss">MEMENTO</div>
+                    <div class="cover-subtitle" id="coverSubtitle">My Diary</div>
+                    <div class="back-cover">
+                        <div style="text-align: center; opacity: 0.7;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">✦</div>
+                            <div>A Journey of Moments</div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="book-pages" id="bookPages" aria-hidden="true">
+                <!-- PAGES -->
+                <div class="book-pages" id="bookPages">
                     <div class="pages-container">
-                        <div class="page-background" aria-hidden="true"></div>
-                        <div class="page-binding" aria-hidden="true"></div>
-
-                        <div class="page-canvas-wrapper" id="pageWrapper" role="region" aria-label="Page canvas area">
-                            <canvas id="pageCanvas"></canvas>
-                            <div class="page-text-layer" id="pageText" contenteditable="true" aria-label="Write on the page"></div>
-                            <div class="page-number" id="pageNumber">1</div>
-                            <div class="page-flip-zone" id="flipZone" title="Flip page"></div>
+                        <div class="page-background"></div>
+                        <div class="page-binding"></div>
+                        <div class="page-canvas-wrapper">
+                            <canvas id="pageCanvas" width="580" height="800"></canvas>
+                            <div class="page-text-layer"></div>
+                            <div class="page-edge"></div>
+                            <div class="page-number" id="pageNumber"></div>
+                            <div class="page-flip-zone" id="pageFlipZone">
+                                <div class="page-flip-corner"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- toolbar -->
-        <div class="toolbar" role="toolbar" aria-label="Editor toolbar">
+        <!-- TOOLBAR -->
+        <div class="toolbar" id="toolbar">
             <div class="toolbar-group">
-                <button class="toolbar-btn" id="toggleSidebarBtn" title="Open pages">☰</button>
-                <button class="toolbar-btn" id="prevBtn" title="Previous page">◀</button>
-                <button class="toolbar-btn" id="nextBtn" title="Next page">▶</button>
+                <button class="toolbar-btn active" data-mode="text" id="modeText">📝</button>
+                <button class="toolbar-btn" data-mode="draw" id="modeDraw">✏️</button>
             </div>
-
             <div class="toolbar-separator"></div>
-
-            <div class="toolbar-group">
-                <input type="color" id="penColor" value="#1a1a1a" title="Pen color" />
-                <input type="range" id="penSize" min="1" max="30" value="3" title="Pen size" />
-                <button class="toolbar-btn" id="eraserBtn" title="Eraser">Eraser</button>
-                <button class="toolbar-btn" id="clearBtn" title="Clear drawing">Clear</button>
+            <div class="toolbar-group" id="drawTools" style="display: none;">
+                <select id="brushType">
+                    <option value="pen">Pen</option>
+                    <option value="pencil">Pencil</option>
+                    <option value="marker">Marker</option>
+                    <option value="eraser">Eraser</option>
+                </select>
             </div>
-
+            <div class="toolbar-group" id="colorControl" style="display: none;">
+                <input type="color" id="brushColor" value="#1a1a1a" title="Brush color">
+            </div>
+            <div class="toolbar-group" id="sizeControl" style="display: none;">
+                <input type="range" id="brushSize" min="0.5" max="20" step="0.5" value="2" title="Brush size">
+            </div>
             <div class="toolbar-separator"></div>
-
             <div class="toolbar-group">
-                <button class="toolbar-btn" id="saveImageBtn" title="Download page image">Download PNG</button>
-                <button class="toolbar-btn" id="downloadPdfBtnBottom" title="Export page to PDF">Export PDF</button>
+                <button class="toolbar-btn" id="undoBtn" title="Undo">↶</button>
+                <button class="toolbar-btn" id="redoBtn" title="Redo">↷</button>
+            </div>
+            <div class="toolbar-separator"></div>
+            <div class="toolbar-group">
+                <button class="toolbar-btn" id="exportPngBtn">🖼️</button>
+                <button class="toolbar-btn" id="saveBtn">💾</button>
+            </div>
+        </div>
+
+        <!-- LIBRARY VIEW -->
+        <div id="libraryView">
+            <div class="library-header">
+                <h2 class="library-title">📚 Your Library</h2>
+                <button class="library-close" id="libraryClose">✕</button>
+            </div>
+            <div class="library-content">
+                <div class="library-grid" id="libraryGrid"></div>
             </div>
         </div>
     </div>
 
+    <!-- COVER CUSTOMIZER MODAL -->
+    <div class="cover-customizer" id="coverCustomizer">
+        <div class="customizer-panel">
+            <!-- PREVIEW -->
+            <div class="customizer-preview">
+                <div class="preview-book" id="previewBook" style="background: linear-gradient(135deg, #5c2e3a 0%, #4a3f35 50%, #3d3530 100%); color: #f4e4c1;">
+                    <div class="preview-book-content">
+                        <div style="font-size: 1.3rem; font-weight: 700; letter-spacing: 2px; margin-bottom: 0.8rem; font-family: var(--font-serif);" id="previewEmboss">MEMENTO</div>
+                        <div style="font-size: 0.7rem; opacity: 0.8; letter-spacing: 1px; font-family: var(--font-elegant);" id="previewSubtitle">My Diary</div>
+                        <div style="margin-top: 1rem; opacity: 0.6; font-size: 0.8rem;">
+                            <div style="margin-top: 0.5rem;">✦</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTROLS -->
+            <div class="customizer-controls">
+                <!-- LEATHER COLOR -->
+                <div class="control-section">
+                    <div class="section-title">Leather Color</div>
+                    <div class="control-options">
+                        <div class="color-option active" data-color="burgundy" onclick="window.app.setCoverColor(this)">
+                            <div class="color-swatch" style="background: #5c2e3a;"></div>
+                            <span>Burgundy</span>
+                        </div>
+                        <div class="color-option" data-color="deep-red" onclick="window.app.setCoverColor(this)">
+                            <div class="color-swatch" style="background: #8b1a1a;"></div>
+                            <span>Deep Red</span>
+                        </div>
+                        <div class="color-option" data-color="brown" onclick="window.app.setCoverColor(this)">
+                            <div class="color-swatch" style="background: #4a3f35;"></div>
+                            <span>Brown</span>
+                        </div>
+                        <div class="color-option" data-color="tan" onclick="window.app.setCoverColor(this)">
+                            <div class="color-swatch" style="background: #8b7355;"></div>
+                            <span>Tan</span>
+                        </div>
+                        <div class="color-option" data-color="black" onclick="window.app.setCoverColor(this)">
+                            <div class="color-swatch" style="background: #1a1a1a;"></div>
+                            <span>Black</span>
+                        </div>
+                        <div class="color-option" data-color="charcoal" onclick="window.app.setCoverColor(this)">
+                            <div class="color-swatch" style="background: #2a2a2a;"></div>
+                            <span>Charcoal</span>
+                        </div>
+                        <div class="color-option" data-color="navy" onclick="window.app.setCoverColor(this)">
+                            <div class="color-swatch" style="background: #1f2a3a;"></div>
+                            <span>Navy</span>
+                        </div>
+                        <div class="color-option" data-color="deep-blue" onclick="window.app.setCoverColor(this)">
+                            <div class="color-swatch" style="background: #2c3a4d;"></div>
+                            <span>Deep Blue</span>
+                        </div>
+                        <div class="color-option" data-color="forest" onclick="window.app.setCoverColor(this)">
+                            <div class="color-swatch" style="background: #1f3a2a;"></div>
+                            <span>Forest</span>
+                        </div>
+                        <div class="color-option" data-color="emerald" onclick="window.app.setCoverColor(this)">
+                            <div class="color-swatch" style="background: #2a4a3a;"></div>
+                            <span>Emerald</span>
+                        </div>
+                        <div class="color-option" data-color="plum" onclick="window.app.setCoverColor(this)">
+                            <div class="color-swatch" style="background: #4a2a4a;"></div>
+                            <span>Plum</span>
+                        </div>
+                        <div class="color-option" data-color="wine" onclick="window.app.setCoverColor(this)">
+                            <div class="color-swatch" style="background: #5a1a2a;"></div>
+                            <span>Wine</span>
+                        </div>
+                        <div class="color-option" data-color="cream" onclick="window.app.setCoverColor(this)">
+                            <div class="color-swatch" style="background: #d4c5a0;"></div>
+                            <span>Cream</span>
+                        </div>
+                        <div class="color-option" data-color="gold" onclick="window.app.setCoverColor(this)">
+                            <div class="color-swatch" style="background: #a0832a;"></div>
+                            <span>Gold</span>
+                        </div>
+                        <div class="color-option" data-color="copper" onclick="window.app.setCoverColor(this)">
+                            <div class="color-swatch" style="background: #8b4513;"></div>
+                            <span>Copper</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LEATHER TEXTURE -->
+                <div class="control-section">
+                    <div class="section-title">Leather Texture</div>
+                    <div class="control-options">
+                        <div class="color-option active" data-pattern="smooth" onclick="window.app.setCoverPattern(this)">
+                            Smooth
+                        </div>
+                        <div class="color-option" data-pattern="grain" onclick="window.app.setCoverPattern(this)">
+                            Grain
+                        </div>
+                        <div class="color-option" data-pattern="croc" onclick="window.app.setCoverPattern(this)">
+                            Croc
+                        </div>
+                        <div class="color-option" data-pattern="ripple" onclick="window.app.setCoverPattern(this)">
+                            Ripple
+                        </div>
+                        <div class="color-option" data-pattern="vintage" onclick="window.app.setCoverPattern(this)">
+                            Vintage
+                        </div>
+                        <div class="color-option" data-pattern="embossed" onclick="window.app.setCoverPattern(this)">
+                            Embossed
+                        </div>
+                    </div>
+                </div>
+
+                <!-- METALLIC ACCENTS -->
+                <div class="control-section">
+                    <div class="section-title">Trim Color</div>
+                    <div class="control-options">
+                        <div class="color-option active" data-trim="gold" onclick="window.app.setCoverTrim(this)">
+                            <div class="color-swatch" style="background: #d4a574;"></div>
+                            <span>Gold</span>
+                        </div>
+                        <div class="color-option" data-trim="silver" onclick="window.app.setCoverTrim(this)">
+                            <div class="color-swatch" style="background: #c0c0c0;"></div>
+                            <span>Silver</span>
+                        </div>
+                        <div class="color-option" data-trim="rose-gold" onclick="window.app.setCoverTrim(this)">
+                            <div class="color-swatch" style="background: #d4845c;"></div>
+                            <span>Rose Gold</span>
+                        </div>
+                        <div class="color-option" data-trim="bronze" onclick="window.app.setCoverTrim(this)">
+                            <div class="color-swatch" style="background: #8b5a3c;"></div>
+                            <span>Bronze</span>
+                        </div>
+                        <div class="color-option" data-trim="copper" onclick="window.app.setCoverTrim(this)">
+                            <div class="color-swatch" style="background: #a0572a;"></div>
+                            <span>Copper</span>
+                        </div>
+                        <div class="color-option" data-trim="matte" onclick="window.app.setCoverTrim(this)">
+                            <div class="color-swatch" style="background: #808080;"></div>
+                            <span>Matte</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CORNER ORNAMENTS -->
+                <div class="control-section">
+                    <div class="section-title">Corner Style</div>
+                    <div class="control-options">
+                        <div class="color-option active" data-corner="elegant" onclick="window.app.setCoverCorner(this)">
+                            Elegant
+                        </div>
+                        <div class="color-option" data-corner="simple" onclick="window.app.setCoverCorner(this)">
+                            Simple
+                        </div>
+                        <div class="color-option" data-corner="ornate" onclick="window.app.setCoverCorner(this)">
+                            Ornate
+                        </div>
+                        <div class="color-option" data-corner="hidden" onclick="window.app.setCoverCorner(this)">
+                            Hidden
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EMBOSS FONT -->
+                <div class="control-section">
+                    <div class="section-title">Cover Font</div>
+                    <div class="control-options">
+                        <div class="color-option active" data-font="serif" onclick="window.app.setCoverFont(this)" style="font-family: var(--font-serif);">
+                            Serif
+                        </div>
+                        <div class="color-option" data-font="elegant" onclick="window.app.setCoverFont(this)" style="font-family: var(--font-elegant);">
+                            Elegant
+                        </div>
+                        <div class="color-option" data-font="cinzel" onclick="window.app.setCoverFont(this)" style="font-family: var(--font-cinzel);">
+                            Cinzel
+                        </div>
+                        <div class="color-option" data-font="baskerville" onclick="window.app.setCoverFont(this)" style="font-family: var(--font-baskerville);">
+                            Baskerville
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SPINE STYLE -->
+                <div class="control-section">
+                    <div class="section-title">Spine Design</div>
+                    <div class="control-options">
+                        <div class="color-option active" data-spine="simple" onclick="window.app.setCoverSpine(this)">
+                            Simple
+                        </div>
+                        <div class="color-option" data-spine="stitched" onclick="window.app.setCoverSpine(this)">
+                            Stitched
+                        </div>
+                        <div class="color-option" data-spine="riveted" onclick="window.app.setCoverSpine(this)">
+                            Riveted
+                        </div>
+                        <div class="color-option" data-spine="reinforced" onclick="window.app.setCoverSpine(this)">
+                            Reinforced
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COVER TEXT CUSTOMIZATION -->
+                <div class="control-section">
+                    <div class="section-title">Cover Text</div>
+                    <div class="control-group">
+                        <label class="control-label">Main Title</label>
+                        <input type="text" id="coverText" class="modal-input" placeholder="Enter title" value="MEMENTO" style="color: var(--gold-light);">
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Subtitle</label>
+                        <input type="text" id="coverSubtextInput" class="modal-input" placeholder="Enter subtitle" value="My Diary" style="color: var(--gold-light);">
+                    </div>
+                </div>
+
+                <!-- TITLE STYLING -->
+                <div class="control-section">
+                    <div class="section-title">Title Color</div>
+                    <div class="option-row">
+                        <div class="control-group">
+                            <label class="control-label">Title Tone</label>
+                            <div class="control-options">
+                                <div class="color-option active" data-title-tone="gold" onclick="window.app.setCoverTitleTone(this)">
+                                    <div class="color-swatch" style="background: #f4e4c1;"></div>
+                                    <span>Gold</span>
+                                </div>
+                                <div class="color-option" data-title-tone="silver" onclick="window.app.setCoverTitleTone(this)">
+                                    <div class="color-swatch" style="background: #e8e8e8;"></div>
+                                    <span>Silver</span>
+                                </div>
+                                <div class="color-option" data-title-tone="white" onclick="window.app.setCoverTitleTone(this)">
+                                    <div class="color-swatch" style="background: #ffffff;"></div>
+                                    <span>White</span>
+                                </div>
+                                <div class="color-option" data-title-tone="dark" onclick="window.app.setCoverTitleTone(this)">
+                                    <div class="color-swatch" style="background: #1a1a1a;"></div>
+                                    <span>Dark</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GLOSSINESS -->
+                <div class="control-section">
+                    <div class="section-title">Finish</div>
+                    <div class="control-options">
+                        <div class="color-option active" data-finish="matte" onclick="window.app.setCoverFinish(this)">
+                            Matte
+                        </div>
+                        <div class="color-option" data-finish="semi-gloss" onclick="window.app.setCoverFinish(this)">
+                            Semi-Gloss
+                        </div>
+                        <div class="color-option" data-finish="gloss" onclick="window.app.setCoverFinish(this)">
+                            Gloss
+                        </div>
+                        <div class="color-option" data-finish="satin" onclick="window.app.setCoverFinish(this)">
+                            Satin
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ACTIONS -->
+                <div class="customizer-actions">
+                    <button class="modal-btn modal-btn-secondary" id="customizeClose">Cancel</button>
+                    <button class="modal-btn modal-btn-primary" id="customizeApply">Apply Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- IMPORT MODAL -->
+    <div id="importModal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-title">📂 Import Backup</h2>
+            <input type="file" id="importFile" accept=".json" class="modal-input" placeholder="Choose file">
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-secondary" id="importCancelBtn">Cancel</button>
+                <button class="modal-btn modal-btn-primary" id="importConfirmBtn">Import</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STATUS INDICATOR -->
+    <div id="statusIndicator" class="status-indicator"></div>
+
     <script>
-    (function () {
-        // Basic state
-        const landing = document.getElementById('landing');
-        const enterBtn = document.getElementById('enterBtn');
-        const app = document.getElementById('app');
-        const bookCover = document.getElementById('bookCover');
-        const bookPages = document.getElementById('bookPages');
-        const backToCoverBtn = document.getElementById('backToCoverBtn');
-        const sidebar = document.getElementById('sidebar');
-        const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
-        const closeSidebar = document.getElementById('closeSidebar');
-        const pageList = document.getElementById('pageList');
-        const addPageBtn = document.getElementById('addPageBtn');
-        const deletePageBtn = document.getElementById('deletePageBtn');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const downloadPdfBtn = document.getElementById('downloadPdfBtn');
-        const downloadPdfBtnBottom = document.getElementById('downloadPdfBtnBottom');
-        const saveImageBtn = document.getElementById('saveImageBtn');
+        // ============================================================================
+        // EXTREME REALISM LUXURY DIARY WITH UNLIMITED CUSTOMIZATION
+        // ============================================================================
 
-        const pageCanvas = document.getElementById('pageCanvas');
-        const pageWrapper = document.getElementById('pageWrapper');
-        const pageText = document.getElementById('pageText');
-        const pageNumber = document.getElementById('pageNumber');
-        const flipZone = document.getElementById('flipZone');
-
-        const penColorInput = document.getElementById('penColor');
-        const penSizeInput = document.getElementById('penSize');
-        const eraserBtn = document.getElementById('eraserBtn');
-        const clearBtn = document.getElementById('clearBtn');
-
-        const starfield = document.getElementById('starfield');
-
-        // pages data model
-        let pages = [];
-        let currentPageIndex = 0;
-
-        // drawing state
-        let ctx, isDrawing = false, lastX = 0, lastY = 0;
-        let penColor = penColorInput.value;
-        let penSize = parseInt(penSizeInput.value, 10);
-        let isEraser = false;
-
-        // utils: safe access to jsPDF
-        const getJsPDF = () => {
-            if (window.jspdf && window.jspdf.jsPDF) return window.jspdf.jsPDF;
-            if (window.jsPDF) return window.jsPDF;
-            // fallback: try to read from window.jspdf
-            return (window.jspdf && window.jspdf.jsPDF) || null;
+        const CONFIG = {
+            CANVAS_WIDTH: 580,
+            CANVAS_HEIGHT: 800,
+            PAGE_MARGIN: 40,
+            DB_NAME: 'LuxuryDiary',
+            AUTOSAVE_DELAY: 5000,
+            SOUND_ENABLED: true,
         };
 
-        // initialize canvas size to wrapper size and devicePixelRatio handling
-        function resizeCanvasToWrapper() {
-            const dpr = window.devicePixelRatio || 1;
-            const rect = pageWrapper.getBoundingClientRect();
-            pageCanvas.width = Math.max(800, Math.floor(rect.width * dpr)); // ensure decent resolution
-            pageCanvas.height = Math.max(1000, Math.floor(rect.height * dpr));
-            pageCanvas.style.width = rect.width + 'px';
-            pageCanvas.style.height = rect.height + 'px';
-            ctx = pageCanvas.getContext('2d', { alpha: true });
-            ctx.scale(dpr, dpr);
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-            renderCurrentPage(); // re-render drawing from stored data
-        }
-
-        // manage pages (each page stores: text, drawing image dataURL)
-        function createPage(text = '', drawingData = null) {
-            pages.push({ text: text, drawing: drawingData });
-            currentPageIndex = pages.length - 1;
-            refreshPageList();
-            selectPage(currentPageIndex);
-            persistPages();
-        }
-
-        function deleteCurrentPage() {
-            if (pages.length <= 1) {
-                // clear current instead
-                pages[0] = { text: '', drawing: null };
-                selectPage(0);
-            } else {
-                pages.splice(currentPageIndex, 1);
-                currentPageIndex = Math.max(0, currentPageIndex - 1);
-                refreshPageList();
-                selectPage(currentPageIndex);
+        // ========== AUDIO ENGINE ==========
+        class AudioEngine {
+            constructor() {
+                this.enabled = true;
+                this.audioContext = null;
+                this.initAudio();
             }
-            persistPages();
-        }
 
-        function refreshPageList() {
-            pageList.innerHTML = '';
-            pages.forEach((p, i) => {
-                const div = document.createElement('div');
-                div.className = 'page-item' + (i === currentPageIndex ? ' active' : '');
-                div.innerHTML = '<div class="page-item-title">Page ' + (i + 1) + '</div>' + '<div class="page-item-date" style="opacity:.6;font-size:.8rem">Saved</div>';
-                div.addEventListener('click', () => { selectPage(i); });
-                pageList.appendChild(div);
-            });
-        }
-
-        function selectPage(index) {
-            if (index < 0 || index >= pages.length) return;
-            currentPageIndex = index;
-            const page = pages[index];
-            pageText.innerText = page.text || '';
-            pageNumber.innerText = (index + 1);
-            // load drawing image if present
-            if (page.drawing) {
-                const img = new Image();
-                img.onload = function () {
-                    // clear and draw
-                    const dpr = window.devicePixelRatio || 1;
-                    ctx.save();
-                    ctx.setTransform(1,0,0,1,0,0); // reset transform
-                    ctx.clearRect(0,0,pageCanvas.width, pageCanvas.height);
-                    ctx.restore();
-                    // draw image scaled to canvas CSS size
-                    const rect = pageWrapper.getBoundingClientRect();
-                    // draw onto canvas accounting for dpr scaling
-                    const tmpCtx = pageCanvas.getContext('2d');
-                    tmpCtx.save();
-                    tmpCtx.setTransform(dpr,0,0,dpr,0,0);
-                    tmpCtx.drawImage(img, 0, 0, rect.width, rect.height);
-                    tmpCtx.restore();
-                };
-                img.src = page.drawing;
-            } else {
-                // clear canvas
-                clearDrawing(false);
-            }
-            refreshPageList();
-        }
-
-        function persistPages() {
-            try {
-                localStorage.setItem('luxury_diary_pages_v1', JSON.stringify(pages));
-            } catch (e) {
-                // ignore localStorage errors
-            }
-        }
-
-        function loadPages() {
-            try {
-                const raw = localStorage.getItem('luxury_diary_pages_v1');
-                if (raw) {
-                    const parsed = JSON.parse(raw);
-                    if (Array.isArray(parsed) && parsed.length) {
-                        pages = parsed;
-                        currentPageIndex = 0;
-                        refreshPageList();
-                        selectPage(0);
-                        return;
-                    }
-                }
-            } catch (e) {
-                // ignore parse errors
-            }
-            // default initial page
-            pages = [{ text: 'Dear Diary,\n\nStart writing here...', drawing: null }];
-        }
-
-        // drawing functions
-        function setPen() {
-            ctx.globalCompositeOperation = isEraser ? 'destination-out' : 'source-over';
-            ctx.strokeStyle = isEraser ? 'rgba(0,0,0,1)' : penColor;
-            ctx.lineWidth = penSize;
-        }
-
-        function startDrawing(x, y) {
-            isDrawing = true;
-            lastX = x;
-            lastY = y;
-            setPen();
-            ctx.beginPath();
-            ctx.moveTo(lastX, lastY);
-        }
-
-        function drawTo(x, y) {
-            if (!isDrawing) return;
-            ctx.lineTo(x, y);
-            ctx.stroke();
-            lastX = x;
-            lastY = y;
-        }
-
-        function stopDrawing() {
-            if (!isDrawing) return;
-            isDrawing = false;
-            ctx.closePath();
-            saveDrawingToCurrentPage();
-        }
-
-        function clearDrawing(save = true) {
-            const rect = pageWrapper.getBoundingClientRect();
-            const dpr = window.devicePixelRatio || 1;
-            // clear entire canvas in device pixels
-            ctx.save();
-            ctx.setTransform(1,0,0,1,0,0);
-            ctx.clearRect(0,0,pageCanvas.width, pageCanvas.height);
-            ctx.restore();
-            if (save) {
-                pages[currentPageIndex].drawing = null;
-                persistPages();
-            }
-        }
-
-        function saveDrawingToCurrentPage() {
-            // capture the canvas visible area as dataURL
-            // Use toDataURL on canvas element but ensure we capture at displayed resolution
-            const rect = pageWrapper.getBoundingClientRect();
-            // create temporary canvas at CSS px size and draw scaled content
-            const tmp = document.createElement('canvas');
-            tmp.width = rect.width;
-            tmp.height = rect.height;
-            const tmpCtx = tmp.getContext('2d');
-            // draw current pageCanvas image scaled down to CSS px
-            tmpCtx.drawImage(pageCanvas, 0, 0, tmp.width, tmp.height);
-            pages[currentPageIndex].drawing = tmp.toDataURL('image/png');
-            persistPages();
-        }
-
-        // render current drawing data (mainly used on resize)
-        function renderCurrentPage() {
-            // if page has a drawing (data URL) draw it; else clear
-            const p = pages[currentPageIndex];
-            if (p && p.drawing) {
-                const img = new Image();
-                img.onload = function() {
-                    const rect = pageWrapper.getBoundingClientRect();
-                    const dpr = window.devicePixelRatio || 1;
-                    const tmpCtx = pageCanvas.getContext('2d');
-                    tmpCtx.save();
-                    tmpCtx.setTransform(dpr,0,0,dpr,0,0);
-                    tmpCtx.clearRect(0,0,rect.width,rect.height);
-                    tmpCtx.drawImage(img, 0, 0, rect.width, rect.height);
-                    tmpCtx.restore();
-                };
-                img.src = p.drawing;
-            } else {
-                // clear at device resolution
-                const dpr = window.devicePixelRatio || 1;
-                ctx.save();
-                ctx.setTransform(1,0,0,1,0,0);
-                ctx.clearRect(0,0,pageCanvas.width, pageCanvas.height);
-                ctx.restore();
-            }
-        }
-
-        // starfield background simple effect
-        function renderStarfield() {
-            const c = starfield;
-            const ctxS = c.getContext('2d');
-            function resize() {
-                c.width = c.clientWidth * (window.devicePixelRatio || 1);
-                c.height = c.clientHeight * (window.devicePixelRatio || 1);
-                ctxS.setTransform(window.devicePixelRatio || 1, 0, 0, window.devicePixelRatio || 1, 0, 0);
-            }
-            resize();
-            let stars = [];
-            function makeStars() {
-                stars = [];
-                const count = Math.max(60, Math.floor((c.width / 2) / 6));
-                for (let i = 0; i < count; i++) {
-                    stars.push({
-                        x: Math.random() * c.clientWidth,
-                        y: Math.random() * c.clientHeight,
-                        r: Math.random() * 1.6 + 0.2,
-                        a: Math.random() * 0.8 + 0.2,
-                        s: Math.random() * 0.02 + 0.005
-                    });
+            initAudio() {
+                try {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    this.audioContext = new AudioContext();
+                } catch (err) {
+                    console.log('Web Audio API not supported');
                 }
             }
-            makeStars();
-            function loop() {
-                ctxS.clearRect(0,0,c.width,c.height);
-                ctxS.fillStyle = '#0b0b0b';
-                ctxS.fillRect(0,0,c.clientWidth,c.clientHeight);
-                stars.forEach(st => {
-                    ctxS.beginPath();
-                    ctxS.fillStyle = 'rgba(255,255,255,' + st.a + ')';
-                    ctxS.arc(st.x, st.y, st.r, 0, Math.PI * 2);
-                    ctxS.fill();
-                    st.a += st.s;
-                    if (st.a <= 0.1 || st.a > 1.0) st.s = -st.s;
+
+            playPageTurn() {
+                if (!this.enabled || !this.audioContext) return;
+                const ctx = this.audioContext;
+                
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                const filter = ctx.createBiquadFilter();
+                
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(ctx.destination);
+                
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(4000, ctx.currentTime);
+                filter.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.4);
+                
+                osc.frequency.setValueAtTime(300, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(150, ctx.currentTime + 0.4);
+                
+                gain.gain.setValueAtTime(0.4, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+                
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + 0.4);
+            }
+
+            playCoverFlip() {
+                if (!this.enabled || !this.audioContext) return;
+                const ctx = this.audioContext;
+                
+                const osc1 = ctx.createOscillator();
+                const osc2 = ctx.createOscillator();
+                const gain = ctx.createGain();
+                const filter = ctx.createBiquadFilter();
+                
+                osc1.connect(filter);
+                osc2.connect(filter);
+                filter.connect(gain);
+                gain.connect(ctx.destination);
+                
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(1500, ctx.currentTime);
+                filter.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.6);
+                
+                osc1.frequency.setValueAtTime(150, ctx.currentTime);
+                osc1.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.6);
+                
+                osc2.frequency.setValueAtTime(200, ctx.currentTime);
+                osc2.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.6);
+                
+                gain.gain.setValueAtTime(0.5, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
+                
+                osc1.start(ctx.currentTime);
+                osc2.start(ctx.currentTime);
+                osc1.stop(ctx.currentTime + 0.6);
+                osc2.stop(ctx.currentTime + 0.6);
+            }
+
+            playClick() {
+                if (!this.enabled || !this.audioContext) return;
+                const ctx = this.audioContext;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                
+                osc.frequency.setValueAtTime(900, ctx.currentTime);
+                gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.05);
+                
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + 0.05);
+            }
+
+            playSave() {
+                if (!this.enabled || !this.audioContext) return;
+                const ctx = this.audioContext;
+                const notes = [523.25, 659.25, 783.99];
+                
+                notes.forEach((freq, i) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    
+                    osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.08);
+                    gain.gain.setValueAtTime(0.12, ctx.currentTime + i * 0.08);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.08 + 0.12);
+                    
+                    osc.start(ctx.currentTime + i * 0.08);
+                    osc.stop(ctx.currentTime + i * 0.08 + 0.12);
                 });
-                requestAnimationFrame(loop);
             }
-            window.addEventListener('resize', () => { resize(); makeStars(); });
-            loop();
         }
 
-        // export functions
-        async function exportCurrentPageToImage() {
-            // use html2canvas on the wrapper region for highest fidelity (includes text and canvas)
-            const rect = pageWrapper.getBoundingClientRect();
-            // temporarily ensure pageWrapper background is white for export fidelity
-            const originalBg = pageWrapper.style.backgroundColor;
-            pageWrapper.style.backgroundColor = '#ffffff';
-            const canvas = await html2canvas(pageWrapper, { backgroundColor: null, scale: Math.min(2, window.devicePixelRatio || 1) });
-            pageWrapper.style.backgroundColor = originalBg;
-            return canvas.toDataURL('image/png');
-        }
-
-        async function exportCurrentPageToPdf() {
-            const dataUrl = await exportCurrentPageToImage();
-            const img = new Image();
-            img.src = dataUrl;
-            await new Promise((res) => { img.onload = res; });
-            const { jsPDF } = window.jspdf || {};
-            const JsPDF = getJsPDF();
-            if (!JsPDF) {
-                alert('PDF library not loaded.');
-                return;
-            }
-            // create PDF with page size matching image aspect (use A4 orientation if needed)
-            const pdf = new JsPDF({
-                unit: 'px',
-                format: [img.width, img.height]
-            });
-            pdf.addImage(img, 'PNG', 0, 0, img.width, img.height);
-            pdf.save('page-' + (currentPageIndex + 1) + '.pdf');
-        }
-
-        // download PNG
-        async function downloadCurrentPagePNG() {
-            const dataUrl = await exportCurrentPageToImage();
-            const a = document.createElement('a');
-            a.href = dataUrl;
-            a.download = 'page-' + (currentPageIndex + 1) + '.png';
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-        }
-
-        // EVENTS & INTERACTIONS
-        function wireEvents() {
-            // landing
-            enterBtn.addEventListener('click', () => {
-                landing.classList.add('hidden');
-                setTimeout(() => {
-                    landing.style.display = 'none';
-                }, 900);
-                app.style.display = 'block';
-                app.setAttribute('aria-hidden', 'false');
-                // animate open
-                gsap.fromTo('#bookContainer', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .9, ease: 'power3.out' });
-            });
-
-            // open book
-            function openBook() {
-                bookCover.style.pointerEvents = 'none';
-                gsap.to(bookCover, { opacity: 0, y: -40, duration: .6, ease: 'power2.in', onComplete: () => {
-                    bookCover.style.display = 'none';
-                    bookPages.classList.add('show');
-                    backToCoverBtn.classList.add('show');
-                }});
-            }
-            bookCover.addEventListener('click', openBook);
-            bookCover.addEventListener('keydown', (e) => { if (e.key === 'Enter') openBook(); });
-
-            // back to cover
-            backToCoverBtn.addEventListener('click', () => {
-                bookPages.classList.remove('show');
-                bookCover.style.display = '';
-                gsap.fromTo(bookCover, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .6, ease: 'power2.out' });
-                backToCoverBtn.classList.remove('show');
-            });
-
-            // sidebar toggle
-            toggleSidebarBtn.addEventListener('click', () => {
-                sidebar.classList.toggle('open');
-            });
-            closeSidebar.addEventListener('click', () => { sidebar.classList.remove('open'); });
-
-            // paging
-            prevBtn.addEventListener('click', () => {
-                if (currentPageIndex > 0) selectPage(currentPageIndex - 1);
-            });
-            nextBtn.addEventListener('click', () => {
-                if (currentPageIndex < pages.length - 1) selectPage(currentPageIndex + 1);
-            });
-
-            // add/delete page
-            addPageBtn.addEventListener('click', () => { createPage('', null); });
-            deletePageBtn.addEventListener('click', () => {
-                if (confirm('Delete this page?')) deleteCurrentPage();
-            });
-
-            // flip zone quick flip (go to next)
-            flipZone.addEventListener('click', () => {
-                if (currentPageIndex < pages.length - 1) selectPage(currentPageIndex + 1);
-                else createPage('', null);
-            });
-
-            // pen controls
-            penColorInput.addEventListener('input', (e) => { penColor = e.target.value; });
-            penSizeInput.addEventListener('input', (e) => { penSize = parseInt(e.target.value, 10); });
-
-            eraserBtn.addEventListener('click', () => {
-                isEraser = !isEraser;
-                eraserBtn.classList.toggle('active', isEraser);
-                eraserBtn.textContent = isEraser ? 'Pen' : 'Eraser';
-            });
-
-            clearBtn.addEventListener('click', () => {
-                if (confirm('Clear drawings on this page?')) clearDrawing(true);
-            });
-
-            // save image / pdf
-            saveImageBtn.addEventListener('click', downloadCurrentPagePNG);
-            downloadPdfBtn.addEventListener('click', exportCurrentPageToPdf);
-            downloadPdfBtnBottom.addEventListener('click', exportCurrentPageToPdf);
-
-            // drawing pointer events
-            function getCanvasPosFromEvent(e) {
-                const rect = pageCanvas.getBoundingClientRect();
-                const x = (e.clientX - rect.left);
-                const y = (e.clientY - rect.top);
-                return { x, y };
+        // ========== STORAGE MANAGER ==========
+        class StorageManager {
+            constructor() {
+                this.db = null;
+                this.useIndexedDB = true;
             }
 
-            // support pointer events (works for mouse, touch, stylus)
-            pageCanvas.addEventListener('pointerdown', (ev) => {
-                ev.preventDefault();
-                const pos = getCanvasPosFromEvent(ev);
-                // adjust for dpr scaling inside ctx since we scaled context
-                startDrawing(pos.x, pos.y);
-            });
+            async init() {
+                try {
+                    return new Promise((resolve) => {
+                        const req = indexedDB.open(CONFIG.DB_NAME, 1);
+                        const timeout = setTimeout(() => {
+                            this.useIndexedDB = false;
+                            resolve(false);
+                        }, 3000);
 
-            window.addEventListener('pointermove', (ev) => {
-                if (!isDrawing) return;
-                const pos = getCanvasPosFromEvent(ev);
-                drawTo(pos.x, pos.y);
-            });
+                        req.onerror = () => {
+                            clearTimeout(timeout);
+                            this.useIndexedDB = false;
+                            resolve(false);
+                        };
 
-            window.addEventListener('pointerup', (ev) => {
-                stopDrawing();
-            });
+                        req.onsuccess = () => {
+                            clearTimeout(timeout);
+                            this.db = req.result;
+                            resolve(true);
+                        };
 
-            // keep text changes in model
-            pageText.addEventListener('input', () => {
-                pages[currentPageIndex].text = pageText.innerText;
-                persistPages();
-            });
-
-            // delete page via keyboard
-            window.addEventListener('keydown', (e) => {
-                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
-                    e.preventDefault();
-                    persistPages();
-                    alert('Saved locally.');
+                        req.onupgradeneeded = (e) => {
+                            const db = e.target.result;
+                            if (!db.objectStoreNames.contains('pages')) {
+                                db.createObjectStore('pages', { keyPath: 'id' });
+                            }
+                            if (!db.objectStoreNames.contains('settings')) {
+                                db.createObjectStore('settings', { keyPath: 'key' });
+                            }
+                        };
+                    });
+                } catch (err) {
+                    this.useIndexedDB = false;
+                    return false;
                 }
-            });
+            }
 
-            // save drawing when leaving page area
-            pageWrapper.addEventListener('mouseleave', stopDrawing);
+            async savePage(page) {
+                if (this.useIndexedDB && this.db) {
+                    try {
+                        return new Promise((resolve) => {
+                            const tx = this.db.transaction('pages', 'readwrite');
+                            tx.objectStore('pages').put(page);
+                            resolve();
+                        });
+                    } catch (err) {
+                        console.error('Save error:', err);
+                    }
+                } else {
+                    localStorage.setItem(`page_${page.id}`, JSON.stringify(page));
+                }
+            }
 
-            // download via bottom PDF button inside sidebar
-            downloadPdfBtn.addEventListener('click', exportCurrentPageToPdf);
-        }
+            async getPage(id) {
+                if (this.useIndexedDB && this.db) {
+                    try {
+                        return new Promise((resolve) => {
+                            const tx = this.db.transaction('pages', 'readonly');
+                            const req = tx.objectStore('pages').get(id);
+                            req.onerror = () => resolve(null);
+                            req.onsuccess = () => resolve(req.result || null);
+                        });
+                    } catch (err) {
+                        return null;
+                    }
+                } else {
+                    const data = localStorage.getItem(`page_${id}`);
+                    return data ? JSON.parse(data) : null;
+                }
+            }
 
-        // on window resize handle canvas resizing
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(resizeCanvasToWrapper, 150);
-        });
-
-        // persist text when switching pages
-        // before unload, save text and drawing
-        window.addEventListener('beforeunload', () => {
-            pages[currentPageIndex].text = pageText.innerText;
-            saveDrawingToCurrentPage();
-            persistPages();
-        });
-
-        // initialize everything
-        function init() {
-            renderStarfield();
-            loadPages();
-            refreshPageList();
-            // attach events
-            wireEvents();
-
-            // ensure app hidden until landing dismissed
-            // prepare canvas when book shown
-            const observer = new MutationObserver((mutations) => {
-                for (const m of mutations) {
-                    if (m.type === 'attributes' && m.attributeName === 'class') {
-                        if (bookPages.classList.contains('show')) {
-                            // delay sizing a bit to allow layout / fonts
-                            setTimeout(() => {
-                                resizeCanvasToWrapper();
-                                selectPage(currentPageIndex);
-                            }, 250);
+            async getAllPages() {
+                if (this.useIndexedDB && this.db) {
+                    try {
+                        return new Promise((resolve) => {
+                            const tx = this.db.transaction('pages', 'readonly');
+                            const req = tx.objectStore('pages').getAll();
+                            req.onerror = () => resolve([]);
+                            req.onsuccess = () => resolve(req.result || []);
+                        });
+                    } catch (err) {
+                        return [];
+                    }
+                } else {
+                    const pages = [];
+                    for (let i = 0; i < localStorage.length; i++) {
+                        const key = localStorage.key(i);
+                        if (key && key.startsWith('page_')) {
+                            pages.push(JSON.parse(localStorage.getItem(key)));
                         }
                     }
+                    return pages;
                 }
-            });
-            observer.observe(bookPages, { attributes: true });
+            }
 
-            // initial canvas setup even if book not open (for responsiveness)
-            setTimeout(() => {
-                resizeCanvasToWrapper();
-            }, 100);
+            async saveSettings(key, value) {
+                const data = { key, value };
+                if (this.useIndexedDB && this.db) {
+                    try {
+                        return new Promise((resolve) => {
+                            const tx = this.db.transaction('settings', 'readwrite');
+                            tx.objectStore('settings').put(data);
+                            resolve();
+                        });
+                    } catch (err) {
+                        console.error('Settings save error:', err);
+                    }
+                } else {
+                    localStorage.setItem(`setting_${key}`, JSON.stringify(value));
+                }
+            }
 
-            // show first page if app shown (helpful on reload)
-            selectPage(currentPageIndex);
+            async getSettings(key) {
+                if (this.useIndexedDB && this.db) {
+                    try {
+                        return new Promise((resolve) => {
+                            const tx = this.db.transaction('settings', 'readonly');
+                            const req = tx.objectStore('settings').get(key);
+                            req.onerror = () => resolve(null);
+                            req.onsuccess = () => resolve(req.result?.value || null);
+                        });
+                    } catch (err) {
+                        return null;
+                    }
+                } else {
+                    const data = localStorage.getItem(`setting_${key}`);
+                    return data ? JSON.parse(data) : null;
+                }
+            }
+
+            async deletePage(id) {
+                if (this.useIndexedDB && this.db) {
+                    try {
+                        return new Promise((resolve) => {
+                            const tx = this.db.transaction('pages', 'readwrite');
+                            tx.objectStore('pages').delete(id);
+                            resolve();
+                        });
+                    } catch (err) {
+                        console.error('Delete error:', err);
+                    }
+                } else {
+                    localStorage.removeItem(`page_${id}`);
+                }
+            }
         }
 
-        // run
-        document.addEventListener('DOMContentLoaded', init, { once: true });
-    })();
+        // ========== STROKE CLASS ==========
+        class Stroke {
+            constructor(brush = 'pen', color = '#000000', size = 2) {
+                this.brush = brush;
+                this.color = color;
+                this.size = size;
+                this.points = [];
+                this.pressures = [];
+                this.times = [];
+            }
+
+            addPoint(x, y, pressure = 1.0, time = Date.now()) {
+                this.points.push({ x: Math.round(x * 100) / 100, y: Math.round(y * 100) / 100 });
+                this.pressures.push(Math.max(0.2, Math.min(1.0, pressure)));
+                this.times.push(time);
+            }
+
+            toJSON() {
+                return {
+                    brush: this.brush,
+                    color: this.color,
+                    size: this.size,
+                    points: this.points,
+                    pressures: this.pressures,
+                    times: this.times,
+                };
+            }
+
+            static fromJSON(data) {
+                const s = new Stroke(data.brush, data.color, data.size);
+                s.points = data.points || [];
+                s.pressures = data.pressures || [];
+                s.times = data.times || [];
+                return s;
+            }
+        }
+
+        // ========== DRAWING ENGINE ==========
+        class DrawingEngine {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d', { willReadFrequently: true });
+                this.strokes = [];
+                this.undoStack = [];
+                this.redoStack = [];
+                this.currentStroke = null;
+                this.isDrawing = false;
+
+                this.brush = 'pen';
+                this.color = '#000000';
+                this.size = 2;
+
+                this.lastX = 0;
+                this.lastY = 0;
+                this.lastTime = 0;
+
+                this.setupEventListeners();
+                this.renderPaperTexture();
+            }
+
+            setupEventListeners() {
+                if (!this.canvas) return;
+                this.canvas.addEventListener('pointerdown', (e) => this.onPointerDown(e), { passive: false });
+                this.canvas.addEventListener('pointermove', (e) => this.onPointerMove(e), { passive: false });
+                this.canvas.addEventListener('pointerup', (e) => this.onPointerUp(e), { passive: false });
+                this.canvas.addEventListener('pointercancel', (e) => this.onPointerUp(e), { passive: false });
+            }
+
+            renderPaperTexture() {
+                const imageData = this.ctx.createImageData(this.canvas.width, this.canvas.height);
+                const data = imageData.data;
+                for (let i = 0; i < data.length; i += 4) {
+                    const noise = Math.random() * 6;
+                    data[i] = 254 - noise;
+                    data[i + 1] = 253 - noise;
+                    data[i + 2] = 251 - noise;
+                    data[i + 3] = 255;
+                }
+                this.ctx.putImageData(imageData, 0, 0);
+            }
+
+            onPointerDown(e) {
+                if (window.app && window.app.mode !== 'draw') return;
+                
+                e.preventDefault();
+                this.isDrawing = true;
+                const rect = this.canvas.getBoundingClientRect();
+                const scaleX = this.canvas.width / rect.width;
+                const scaleY = this.canvas.height / rect.height;
+                
+                this.lastX = (e.clientX - rect.left) * scaleX;
+                this.lastY = (e.clientY - rect.top) * scaleY;
+                this.lastTime = Date.now();
+
+                this.currentStroke = new Stroke(this.brush, this.color, this.size);
+                this.currentStroke.addPoint(this.lastX, this.lastY, e.pressure || 1.0, this.lastTime);
+
+                this.undoStack.push(this.strokes.length);
+                this.redoStack = [];
+
+                window.audio.playClick();
+            }
+
+            onPointerMove(e) {
+                if (!this.isDrawing || !this.currentStroke) return;
+
+                e.preventDefault();
+                const rect = this.canvas.getBoundingClientRect();
+                const scaleX = this.canvas.width / rect.width;
+                const scaleY = this.canvas.height / rect.height;
+                
+                const x = (e.clientX - rect.left) * scaleX;
+                const y = (e.clientY - rect.top) * scaleY;
+                const pressure = e.pressure || this.estimatePressureFromVelocity(this.lastX, this.lastY, x, y);
+                const time = Date.now();
+
+                this.currentStroke.addPoint(x, y, pressure, time);
+                this.redraw();
+                
+                this.lastX = x;
+                this.lastY = y;
+                this.lastTime = time;
+            }
+
+            estimatePressureFromVelocity(x1, y1, x2, y2) {
+                const dist = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+                return Math.max(0.3, Math.min(1.0, 1 - dist / 50));
+            }
+
+            onPointerUp(e) {
+                if (!this.isDrawing) return;
+                e.preventDefault();
+                this.isDrawing = false;
+                if (this.currentStroke && this.currentStroke.points.length > 1) {
+                    this.strokes.push(this.currentStroke);
+                }
+                this.currentStroke = null;
+            }
+
+            redraw() {
+                this.renderPaperTexture();
+                for (const stroke of this.strokes) {
+                    this.drawStroke(stroke);
+                }
+                if (this.currentStroke) {
+                    this.drawStroke(this.currentStroke);
+                }
+            }
+
+            drawStroke(stroke) {
+                if (!stroke || !stroke.points || stroke.points.length < 2) return;
+
+                const ctx = this.ctx;
+                ctx.save();
+
+                const points = stroke.points;
+                const pressures = stroke.pressures || [];
+
+                for (let i = 0; i < points.length - 1; i++) {
+                    const p1 = points[i];
+                    const p2 = points[i + 1];
+                    const pressure = (pressures[i] || 1.0) * 0.8 + 0.2;
+                    const width = Math.max(0.5, stroke.size * pressure);
+
+                    if (stroke.brush === 'eraser') {
+                        ctx.globalCompositeOperation = 'destination-out';
+                        ctx.strokeStyle = 'rgba(0,0,0,1)';
+                        ctx.lineWidth = width * 2;
+                    } else {
+                        ctx.globalCompositeOperation = 'source-over';
+                        ctx.strokeStyle = stroke.color;
+                        ctx.lineWidth = width;
+
+                        if (stroke.brush === 'pencil') {
+                            ctx.globalAlpha = 0.65;
+                        } else if (stroke.brush === 'marker') {
+                            ctx.globalAlpha = 0.45;
+                        } else {
+                            ctx.globalAlpha = 0.9;
+                        }
+                    }
+
+                    ctx.lineCap = 'round';
+                    ctx.lineJoin = 'round';
+
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    
+                    if (i < points.length - 2) {
+                        const p3 = points[i + 2];
+                        const cpx = (p2.x + p3.x) / 2;
+                        const cpy = (p2.y + p3.y) / 2;
+                        ctx.quadraticCurveTo(p2.x, p2.y, cpx, cpy);
+                    } else {
+                        ctx.lineTo(p2.x, p2.y);
+                    }
+                    ctx.stroke();
+                }
+
+                ctx.restore();
+            }
+
+            undo() {
+                if (this.strokes.length === 0) return;
+                this.redoStack.push(this.strokes.pop());
+                this.redraw();
+            }
+
+            redo() {
+                if (this.redoStack.length === 0) return;
+                this.strokes.push(this.redoStack.pop());
+                this.redraw();
+            }
+
+            clear() {
+                this.strokes = [];
+                this.undoStack = [];
+                this.redoStack = [];
+                this.redraw();
+            }
+
+            getImageData(scale = 1) {
+                const w = this.canvas.width;
+                const h = this.canvas.height;
+                const scaledCanvas = document.createElement('canvas');
+                scaledCanvas.width = w * scale;
+                scaledCanvas.height = h * scale;
+                const scaledCtx = scaledCanvas.getContext('2d');
+                scaledCtx.scale(scale, scale);
+
+                const imgData = this.ctx.createImageData(w, h);
+                const data = imgData.data;
+                for (let i = 0; i < data.length; i += 4) {
+                    const noise = Math.random() * 6;
+                    data[i] = 254 - noise;
+                    data[i + 1] = 253 - noise;
+                    data[i + 2] = 251 - noise;
+                    data[i + 3] = 255;
+                }
+                scaledCtx.putImageData(imgData, 0, 0);
+
+                for (const stroke of this.strokes) {
+                    this.drawStrokeOnContext(scaledCtx, stroke);
+                }
+
+                return scaledCanvas.toDataURL('image/png');
+            }
+
+            drawStrokeOnContext(ctx, stroke) {
+                if (!stroke || !stroke.points || stroke.points.length < 2) return;
+
+                const points = stroke.points;
+                const pressures = stroke.pressures || [];
+
+                for (let i = 0; i < points.length - 1; i++) {
+                    const p1 = points[i];
+                    const p2 = points[i + 1];
+                    const pressure = (pressures[i] || 1.0) * 0.8 + 0.2;
+                    const width = Math.max(0.5, stroke.size * pressure);
+
+                    if (stroke.brush === 'eraser') {
+                        ctx.globalCompositeOperation = 'destination-out';
+                        ctx.strokeStyle = 'rgba(0,0,0,1)';
+                        ctx.lineWidth = width * 2;
+                    } else {
+                        ctx.globalCompositeOperation = 'source-over';
+                        ctx.strokeStyle = stroke.color;
+                        ctx.lineWidth = width;
+
+                        if (stroke.brush === 'pencil') {
+                            ctx.globalAlpha = 0.65;
+                        } else if (stroke.brush === 'marker') {
+                            ctx.globalAlpha = 0.45;
+                        } else {
+                            ctx.globalAlpha = 0.9;
+                        }
+                    }
+
+                    ctx.lineCap = 'round';
+                    ctx.lineJoin = 'round';
+
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    
+                    if (i < points.length - 2) {
+                        const p3 = points[i + 2];
+                        const cpx = (p2.x + p3.x) / 2;
+                        const cpy = (p2.y + p3.y) / 2;
+                        ctx.quadraticCurveTo(p2.x, p2.y, cpx, cpy);
+                    } else {
+                        ctx.lineTo(p2.x, p2.y);
+                    }
+                    ctx.stroke();
+                }
+
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.globalAlpha = 1.0;
+            }
+        }
+
+        // ========== COLOR DEFINITIONS ==========
+        const COLOR_MAP = {
+            burgundy: 'linear-gradient(135deg, #5c2e3a 0%, #4a3f35 50%, #3d3530 100%)',
+            'deep-red': 'linear-gradient(135deg, #8b1a1a 0%, #6b1515 50%, #5a1010 100%)',
+            brown: 'linear-gradient(135deg, #4a3f35 0%, #3d3530 50%, #2d2620 100%)',
+            tan: 'linear-gradient(135deg, #8b7355 0%, #7a5f42 50%, #6b4e35 100%)',
+            black: 'linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 50%, #050505 100%)',
+            charcoal: 'linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 50%, #151515 100%)',
+            navy: 'linear-gradient(135deg, #1f2a3a 0%, #192230 50%, #0f1620 100%)',
+            'deep-blue': 'linear-gradient(135deg, #2c3a4d 0%, #253340 50%, #1a2630 100%)',
+            forest: 'linear-gradient(135deg, #1f3a2a 0%, #183020 50%, #0f2415 100%)',
+            emerald: 'linear-gradient(135deg, #2a4a3a 0%, #234035 50%, #1a3028 100%)',
+            plum: 'linear-gradient(135deg, #4a2a4a 0%, #3f2540 50%, #342050 100%)',
+            wine: 'linear-gradient(135deg, #5a1a2a 0%, #501520 50%, #451015 100%)',
+            cream: 'linear-gradient(135deg, #d4c5a0 0%, #c8b890 50%, #b8a878 100%)',
+            gold: 'linear-gradient(135deg, #a0832a 0%, #907520 50%, #806e15 100%)',
+            copper: 'linear-gradient(135deg, #8b4513 0%, #7a3d10 50%, #6b360d 100%)',
+        };
+
+        const FONT_MAP = {
+            serif: 'var(--font-serif)',
+            elegant: 'var(--font-elegant)',
+            cinzel: 'var(--font-cinzel)',
+            baskerville: 'var(--font-baskerville)',
+        };
+
+        // ========== MAIN APP ==========
+        class DiaryApp {
+            constructor() {
+                this.storage = new StorageManager();
+                this.pages = [];
+                this.currentPageId = null;
+                this.mode = 'text';
+                this.drawingEngine = null;
+                this.autosaveTimer = null;
+                this.initialized = false;
+                this.currentPageIndex = 0;
+                this.isCoverOpen = false;
+                
+                // COVER CUSTOMIZATION
+                this.coverColor = 'burgundy';
+                this.coverPattern = 'smooth';
+                this.coverTrim = 'gold';
+                this.coverCorner = 'elegant';
+                this.coverFont = 'serif';
+                this.coverSpine = 'simple';
+                this.coverFinish = 'matte';
+                this.coverTitleTone = 'gold';
+                this.coverText = 'MEMENTO';
+                this.coverSubtext = 'My Diary';
+            }
+
+            async init() {
+                try {
+                    await this.storage.init();
+                    await new Promise(r => setTimeout(r, 100));
+
+                    const canvas = document.getElementById('pageCanvas');
+                    if (!canvas) {
+                        console.error('Canvas not found!');
+                        return;
+                    }
+
+                    this.drawingEngine = new DrawingEngine(canvas);
+                    this.pages = await this.storage.getAllPages();
+                    this.pages.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+                    if (this.pages.length === 0) {
+                        await this.newPage();
+                    } else {
+                        await this.openPage(this.pages[0].id);
+                    }
+
+                    // Load cover settings
+                    const savedSettings = {
+                        color: await this.storage.getSettings('coverColor'),
+                        pattern: await this.storage.getSettings('coverPattern'),
+                        trim: await this.storage.getSettings('coverTrim'),
+                        corner: await this.storage.getSettings('coverCorner'),
+                        font: await this.storage.getSettings('coverFont'),
+                        spine: await this.storage.getSettings('coverSpine'),
+                        finish: await this.storage.getSettings('coverFinish'),
+                        titleTone: await this.storage.getSettings('coverTitleTone'),
+                        text: await this.storage.getSettings('coverText'),
+                        subtext: await this.storage.getSettings('coverSubtext'),
+                    };
+
+                    Object.entries(savedSettings).forEach(([key, value]) => {
+                        if (value) {
+                            if (key === 'text') this.coverText = value;
+                            else if (key === 'subtext') this.coverSubtext = value;
+                            else this[`cover${key.charAt(0).toUpperCase() + key.slice(1)}`] = value;
+                        }
+                    });
+
+                    this.updateCoverDisplay();
+                    this.renderPageList();
+                    this.setupKeyboardShortcuts();
+                    this.setupAutosave();
+                    this.setupEventListeners();
+                    this.setupPageFlipInteraction();
+                    this.setupBookCoverInteraction();
+
+                    this.initialized = true;
+                    this.showStatus('Welcome to your sanctuary ✨', 2000);
+                } catch (err) {
+                    console.error('Init error:', err);
+                }
+            }
+
+            updateCoverDisplay() {
+                const cover = document.getElementById('bookCover');
+                const emboss = document.getElementById('coverEmboss');
+                const subtitle = document.getElementById('coverSubtitle');
+                const preview = document.getElementById('previewBook');
+                const previewEmboss = document.getElementById('previewEmboss');
+                const previewSubtitle = document.getElementById('previewSubtitle');
+                const cornerElements = document.querySelectorAll('.corner-ornament');
+
+                if (cover) cover.style.background = COLOR_MAP[this.coverColor] || COLOR_MAP.burgundy;
+                if (preview) preview.style.background = COLOR_MAP[this.coverColor] || COLOR_MAP.burgundy;
+                
+                if (emboss) {
+                    emboss.style.fontFamily = FONT_MAP[this.coverFont] || FONT_MAP.serif;
+                    emboss.textContent = this.coverText;
+                }
+                if (previewEmboss) {
+                    previewEmboss.style.fontFamily = FONT_MAP[this.coverFont] || FONT_MAP.serif;
+                    previewEmboss.textContent = this.coverText;
+                }
+                
+                if (subtitle) subtitle.textContent = this.coverSubtext;
+                if (previewSubtitle) previewSubtitle.textContent = this.coverSubtext;
+
+                // Apply corner style
+                const cornerOpacity = this.coverCorner === 'hidden' ? 0 : (this.coverCorner === 'ornate' ? 0.8 : 0.4);
+                cornerElements.forEach(el => {
+                    el.style.opacity = cornerOpacity;
+                    if (this.coverCorner === 'simple') el.style.borderWidth = '1px';
+                    else if (this.coverCorner === 'ornate') el.style.borderWidth = '3px';
+                });
+
+                // Apply spine style
+                const binding = document.querySelector('.page-binding');
+                if (binding) {
+                    if (this.coverSpine === 'stitched') {
+                        binding.style.backgroundImage = 'repeating-linear-gradient(0deg, rgba(255,255,255,0.1) 0px, rgba(255,255,255,0.1) 2px, transparent 2px, transparent 6px)';
+                    } else if (this.coverSpine === 'riveted') {
+                        binding.style.backgroundImage = 'radial-gradient(circle, rgba(212, 165, 116, 0.3) 2px, transparent 2px)';
+                        binding.style.backgroundSize = '4px 8px';
+                        binding.style.backgroundPosition = '0 0';
+                    } else {
+                        binding.style.backgroundImage = 'none';
+                    }
+                }
+
+                // Apply finish
+                const cover2 = document.getElementById('bookCover');
+                if (cover2) {
+                    if (this.coverFinish === 'gloss') {
+                        cover2.style.filter = 'brightness(1.1)';
+                    } else if (this.coverFinish === 'semi-gloss') {
+                        cover2.style.filter = 'brightness(1.05)';
+                    } else if (this.coverFinish === 'satin') {
+                        cover2.style.filter = 'brightness(1.02)';
+                    } else {
+                        cover2.style.filter = 'brightness(1)';
+                    }
+                }
+            }
+
+            setCoverColor(element) {
+                document.querySelectorAll('[data-color]').forEach(el => el.classList.remove('active'));
+                element.classList.add('active');
+                this.coverColor = element.dataset.color;
+                this.updateCoverDisplay();
+            }
+
+            setCoverPattern(element) {
+                document.querySelectorAll('[data-pattern]').forEach(el => el.classList.remove('active'));
+                element.classList.add('active');
+                this.coverPattern = element.dataset.pattern;
+            }
+
+            setCoverTrim(element) {
+                document.querySelectorAll('[data-trim]').forEach(el => el.classList.remove('active'));
+                element.classList.add('active');
+                this.coverTrim = element.dataset.trim;
+            }
+
+            setCoverCorner(element) {
+                document.querySelectorAll('[data-corner]').forEach(el => el.classList.remove('active'));
+                element.classList.add('active');
+                this.coverCorner = element.dataset.corner;
+                this.updateCoverDisplay();
+            }
+
+            setCoverFont(element) {
+                document.querySelectorAll('[data-font]').forEach(el => el.classList.remove('active'));
+                element.classList.add('active');
+                this.coverFont = element.dataset.font;
+                this.updateCoverDisplay();
+            }
+
+            setCoverSpine(element) {
+                document.querySelectorAll('[data-spine]').forEach(el => el.classList.remove('active'));
+                element.classList.add('active');
+                this.coverSpine = element.dataset.spine;
+                this.updateCoverDisplay();
+            }
+
+            setCoverFinish(element) {
+                document.querySelectorAll('[data-finish]').forEach(el => el.classList.remove('active'));
+                element.classList.add('active');
+                this.coverFinish = element.dataset.finish;
+                this.updateCoverDisplay();
+            }
+
+            setCoverTitleTone(element) {
+                document.querySelectorAll('[data-title-tone]').forEach(el => el.classList.remove('active'));
+                element.classList.add('active');
+                this.coverTitleTone = element.dataset['title-tone'];
+                const emboss = document.getElementById('coverEmboss');
+                if (emboss) {
+                    const toneMap = {
+                        gold: 'linear-gradient(135deg, var(--gold-light) 0%, var(--gold-dark) 50%, #c9a066 100%)',
+                        silver: 'linear-gradient(135deg, #e8e8e8 0%, #c0c0c0 50%, #a0a0a0 100%)',
+                        white: 'linear-gradient(135deg, #ffffff 0%, #f5f5f5 50%, #e0e0e0 100%)',
+                        dark: 'linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 50%, #050505 100%)',
+                    };
+                    emboss.style.backgroundImage = toneMap[this.coverTitleTone];
+                }
+            }
+
+            setupBookCoverInteraction() {
+                const cover = document.getElementById('bookCover');
+                if (!cover) return;
+                cover.addEventListener('click', () => this.openCover());
+            }
+
+            openCover() {
+                const cover = document.getElementById('bookCover');
+                const pages = document.getElementById('bookPages');
+                const returnBtn = document.getElementById('returnCoverBtn');
+
+                if (!cover || !pages) return;
+
+                cover.classList.add('flipping');
+                this.isCoverOpen = true;
+
+                gsap.to(cover, {
+                    duration: 0.8,
+                    rotationY: 180,
+                    transformOrigin: '0% 50%',
+                    ease: 'power2.inOut',
+                    onComplete: () => {
+                        cover.classList.remove('flipping');
+                    }
+                });
+
+                gsap.to(pages, { duration: 0.8, opacity: 1, ease: 'power2.inOut' });
+                pages.classList.add('show');
+
+                if (returnBtn) returnBtn.classList.add('show');
+
+                window.audio.playCoverFlip();
+                this.showStatus('Welcome! ✨', 1000);
+            }
+
+            closeCover() {
+                const cover = document.getElementById('bookCover');
+                const pages = document.getElementById('bookPages');
+                const returnBtn = document.getElementById('returnCoverBtn');
+
+                if (!cover || !pages) return;
+
+                this.isCoverOpen = false;
+                this.savePage();
+
+                gsap.to(cover, {
+                    duration: 0.8,
+                    rotationY: 0,
+                    transformOrigin: '0% 50%',
+                    ease: 'power2.inOut'
+                });
+
+                gsap.to(pages, { duration: 0.8, opacity: 0, ease: 'power2.inOut', onComplete: () => {
+                    pages.classList.remove('show');
+                }});
+
+                if (returnBtn) returnBtn.classList.remove('show');
+
+                window.audio.playCoverFlip();
+                this.showStatus('Cover closed', 800);
+            }
+
+            setupPageFlipInteraction() {
+                const flipZone = document.getElementById('pageFlipZone');
+                let isFlipping = false;
+                let startX, startY;
+
+                if (!flipZone) return;
+
+                flipZone.addEventListener('pointerdown', (e) => {
+                    if (!this.isCoverOpen) return;
+                    isFlipping = true;
+                    startX = e.clientX;
+                    startY = e.clientY;
+                    flipZone.style.opacity = '0.6';
+                });
+
+                document.addEventListener('pointermove', (e) => {
+                    if (!isFlipping || !flipZone) return;
+
+                    const deltaX = e.clientX - startX;
+                    const deltaY = e.clientY - startY;
+                    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+                    if (distance > 30) {
+                        const flipProgress = Math.max(0, Math.min(1, -deltaX / 250));
+                        this.animatePageFlip(flipProgress);
+                    }
+                });
+
+                document.addEventListener('pointerup', () => {
+                    if (!isFlipping) return;
+                    isFlipping = false;
+                    if (flipZone) flipZone.style.opacity = '0';
+                    this.completePageFlip();
+                });
+
+                // Swipe
+                let touchStartX = 0;
+                document.addEventListener('touchstart', (e) => {
+                    if (!this.isCoverOpen) return;
+                    touchStartX = e.touches[0].clientX;
+                }, false);
+
+                document.addEventListener('touchend', (e) => {
+                    if (!this.isCoverOpen) return;
+                    const touchEndX = e.changedTouches[0].clientX;
+                    const diff = touchStartX - touchEndX;
+
+                    if (Math.abs(diff) > 80) {
+                        window.audio.playPageTurn();
+                        if (diff > 0) {
+                            this.nextPage();
+                        } else {
+                            this.previousPage();
+                        }
+                    }
+                }, false);
+            }
+
+            animatePageFlip(progress) {
+                const wrapper = document.querySelector('.page-canvas-wrapper');
+                if (!wrapper) return;
+
+                const skew = progress * 20;
+                const rotateY = progress * 25;
+                const opacity = 1 - progress * 0.2;
+
+                wrapper.style.transform = `perspective(1200px) skewY(${skew}deg) rotateY(${rotateY}deg)`;
+                wrapper.style.opacity = opacity;
+                wrapper.style.filter = `brightness(${0.95 + progress * 0.1})`;
+            }
+
+            completePageFlip() {
+                const wrapper = document.querySelector('.page-canvas-wrapper');
+                if (!wrapper) return;
+
+                gsap.to(wrapper, {
+                    duration: 0.5,
+                    skewY: 0,
+                    rotateY: 0,
+                    opacity: 1,
+                    filter: 'brightness(1)',
+                    ease: 'back.out'
+                });
+            }
+
+            setupEventListeners() {
+                // Sidebar
+                const sidebarToggle = document.getElementById('sidebarToggle');
+                const sidebarClose = document.getElementById('sidebarClose');
+                const sidebar = document.getElementById('sidebar');
+
+                if (sidebarToggle) sidebarToggle.addEventListener('click', () => {
+                    sidebar.classList.toggle('open');
+                    window.audio.playClick();
+                    gsap.to(sidebarToggle, { duration: 0.3, rotate: sidebar.classList.contains('open') ? 90 : 0 });
+                });
+
+                if (sidebarClose) sidebarClose.addEventListener('click', () => {
+                    sidebar.classList.remove('open');
+                });
+
+                // Return to cover button
+                const returnCoverBtn = document.getElementById('returnCoverBtn');
+                if (returnCoverBtn) {
+                    returnCoverBtn.addEventListener('click', () => this.closeCover());
+                }
+
+                // Sound toggle
+                const soundToggle = document.getElementById('soundToggle');
+                if (soundToggle) {
+                    soundToggle.addEventListener('click', () => {
+                        window.audio.enabled = !window.audio.enabled;
+                        soundToggle.classList.toggle('muted');
+                        window.audio.playClick();
+                    });
+                }
+
+                // Mode buttons
+                const modeText = document.getElementById('modeText');
+                const modeDraw = document.getElementById('modeDraw');
+                if (modeText) modeText.addEventListener('click', () => this.setMode('text'));
+                if (modeDraw) modeDraw.addEventListener('click', () => this.setMode('draw'));
+
+                // Action buttons
+                const newPageBtn = document.getElementById('newPageBtn');
+                const libraryBtn = document.getElementById('libraryBtn');
+                const customizeBtn = document.getElementById('customizeBtn');
+                const exportPdfBtn = document.getElementById('exportPdfBtn');
+                const exportJsonBtn = document.getElementById('exportJsonBtn');
+                const importJsonBtn = document.getElementById('importJsonBtn');
+
+                if (newPageBtn) newPageBtn.addEventListener('click', () => this.newPage());
+                if (libraryBtn) libraryBtn.addEventListener('click', () => this.toggleLibrary());
+                if (customizeBtn) customizeBtn.addEventListener('click', () => this.openCoverCustomizer());
+                if (exportPdfBtn) exportPdfBtn.addEventListener('click', () => this.exportPDF());
+                if (exportJsonBtn) exportJsonBtn.addEventListener('click', () => this.exportJSON());
+                if (importJsonBtn) importJsonBtn.addEventListener('click', () => {
+                    document.getElementById('importModal').classList.add('active');
+                });
+
+                // Toolbar buttons
+                const undoBtn = document.getElementById('undoBtn');
+                const redoBtn = document.getElementById('redoBtn');
+                const exportPngBtn = document.getElementById('exportPngBtn');
+                const saveBtn = document.getElementById('saveBtn');
+
+                if (undoBtn) undoBtn.addEventListener('click', () => this.undo());
+                if (redoBtn) redoBtn.addEventListener('click', () => this.redo());
+                if (exportPngBtn) exportPngBtn.addEventListener('click', () => this.savePagePNG());
+                if (saveBtn) saveBtn.addEventListener('click', () => this.savePage());
+
+                // Draw tools
+                const brushType = document.getElementById('brushType');
+                const brushColor = document.getElementById('brushColor');
+                const brushSize = document.getElementById('brushSize');
+
+                if (brushType) brushType.addEventListener('change', (e) => this.setBrush(e.target.value));
+                if (brushColor) brushColor.addEventListener('change', (e) => this.setBrushColor(e.target.value));
+                if (brushSize) brushSize.addEventListener('change', (e) => this.setBrushSize(e.target.value));
+
+                // Import modal
+                const importCancelBtn = document.getElementById('importCancelBtn');
+                const importConfirmBtn = document.getElementById('importConfirmBtn');
+
+                if (importCancelBtn) importCancelBtn.addEventListener('click', () => {
+                    document.getElementById('importModal').classList.remove('active');
+                });
+                if (importConfirmBtn) importConfirmBtn.addEventListener('click', () => this.importJSON());
+
+                // Customizer
+                const customizeClose = document.getElementById('customizeClose');
+                const customizeApply = document.getElementById('customizeApply');
+                const coverText = document.getElementById('coverText');
+                const coverSubtextInput = document.getElementById('coverSubtextInput');
+
+                if (customizeClose) customizeClose.addEventListener('click', () => {
+                    document.getElementById('coverCustomizer').classList.remove('active');
+                });
+
+                if (customizeApply) customizeApply.addEventListener('click', async () => {
+                    this.coverText = coverText.value || 'MEMENTO';
+                    this.coverSubtext = coverSubtextInput.value || 'My Diary';
+                    this.updateCoverDisplay();
+                    
+                    await Promise.all([
+                        this.storage.saveSettings('coverText', this.coverText),
+                        this.storage.saveSettings('coverSubtext', this.coverSubtext),
+                        this.storage.saveSettings('coverColor', this.coverColor),
+                        this.storage.saveSettings('coverPattern', this.coverPattern),
+                        this.storage.saveSettings('coverTrim', this.coverTrim),
+                        this.storage.saveSettings('coverCorner', this.coverCorner),
+                        this.storage.saveSettings('coverFont', this.coverFont),
+                        this.storage.saveSettings('coverSpine', this.coverSpine),
+                        this.storage.saveSettings('coverFinish', this.coverFinish),
+                        this.storage.saveSettings('coverTitleTone', this.coverTitleTone),
+                    ]);
+                    
+                    document.getElementById('coverCustomizer').classList.remove('active');
+                    this.showStatus('Cover updated ✨', 1500);
+                    window.audio.playSave();
+                });
+
+                // Library
+                const libraryClose = document.getElementById('libraryClose');
+                if (libraryClose) libraryClose.addEventListener('click', () => this.toggleLibrary());
+
+                window.addEventListener('resize', () => this.resizeCanvas());
+            }
+
+            resizeCanvas() {
+                const container = document.querySelector('.book-3d-container');
+                if (!container) return;
+
+                const viewer = document.querySelector('.book-viewer');
+                if (!viewer) return;
+
+                const scale = Math.min(
+                    (viewer.clientWidth - 40) / 600,
+                    (viewer.clientHeight - 40) / 800,
+                    1
+                );
+
+                container.style.width = (600 * scale) + 'px';
+                container.style.height = (800 * scale) + 'px';
+            }
+
+            setupKeyboardShortcuts() {
+                document.addEventListener('keydown', (e) => {
+                    if (e.ctrlKey || e.metaKey) {
+                        if (e.key === 's') {
+                            e.preventDefault();
+                            this.savePage();
+                        } else if (e.key === 'z' && !e.shiftKey) {
+                            e.preventDefault();
+                            this.undo();
+                        } else if (e.key === 'y' || (e.key === 'z' && e.shiftKey)) {
+                            e.preventDefault();
+                            this.redo();
+                        }
+                    }
+
+                    if (e.key === 'ArrowLeft' && this.isCoverOpen) {
+                        e.preventDefault();
+                        this.previousPage();
+                    } else if (e.key === 'ArrowRight' && this.isCoverOpen) {
+                        e.preventDefault();
+                        this.nextPage();
+                    } else if (e.key === 'Escape' && this.isCoverOpen) {
+                        e.preventDefault();
+                        this.closeCover();
+                    }
+                });
+            }
+
+            setupAutosave() {
+                this.autosaveTimer = setInterval(() => {
+                    if (this.currentPageId && this.isCoverOpen) {
+                        this.savePage();
+                    }
+                }, CONFIG.AUTOSAVE_DELAY);
+            }
+
+            async newPage() {
+                const page = {
+                    id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+                    title: `Page ${this.pages.length + 1}`,
+                    createdAt: Date.now(),
+                    updatedAt: Date.now(),
+                    textContent: '',
+                    strokes: [],
+                    thumbnail: '',
+                };
+
+                await this.storage.savePage(page);
+                this.pages.unshift(page);
+                if (this.isCoverOpen) {
+                    await this.openPage(page.id);
+                }
+                this.renderPageList();
+                this.showStatus('✨ New page', 1200);
+                window.audio.playSave();
+            }
+
+            async openPage(id) {
+                try {
+                    if (this.currentPageId) {
+                        await this.savePage();
+                    }
+
+                    const page = await this.storage.getPage(id);
+                    if (!page) return;
+
+                    this.currentPageId = id;
+                    this.currentPageIndex = this.pages.findIndex(p => p.id === id);
+
+                    const oldTextLayer = document.querySelector('.page-text-layer');
+                    if (oldTextLayer) oldTextLayer.remove();
+
+                    if (this.drawingEngine) {
+                        this.drawingEngine.clear();
+                        if (page.strokes && Array.isArray(page.strokes)) {
+                            this.drawingEngine.strokes = page.strokes.map(s => {
+                                try {
+                                    return Stroke.fromJSON(s);
+                                } catch (e) {
+                                    return new Stroke();
+                                }
+                            });
+                            this.drawingEngine.redraw();
+                        }
+                    }
+
+                    const canvas = document.getElementById('pageCanvas');
+                    if (canvas && canvas.parentElement) {
+                        const textLayer = document.createElement('div');
+                        textLayer.className = 'page-text-layer';
+                        textLayer.textContent = page.textContent || '';
+                        textLayer.contentEditable = 'true';
+                        textLayer.setAttribute('aria-label', 'Page text content');
+                        canvas.parentElement.appendChild(textLayer);
+                    }
+
+                    const pageNumber = document.getElementById('pageNumber');
+                    if (pageNumber) {
+                        pageNumber.textContent = `${this.currentPageIndex + 1}/${this.pages.length}`;
+                    }
+
+                    this.renderPageList();
+                    this.showStatus(`📖 Page ${this.currentPageIndex + 1}`, 1000);
+                    this.resizeCanvas();
+
+                    const wrapper = document.querySelector('.page-canvas-wrapper');
+                    if (wrapper) {
+                        gsap.from(wrapper, { duration: 0.5, opacity: 0, y: 30, ease: 'back.out' });
+                    }
+                } catch (err) {
+                    console.error('Open page error:', err);
+                }
+            }
+
+            async savePage() {
+                try {
+                    if (!this.currentPageId) return;
+
+                    const textLayer = document.querySelector('.page-text-layer');
+                    const page = await this.storage.getPage(this.currentPageId);
+                    if (!page) return;
+
+                    page.textContent = textLayer ? textLayer.textContent : '';
+                    page.strokes = this.drawingEngine ? this.drawingEngine.strokes.map(s => s.toJSON()) : [];
+                    page.updatedAt = Date.now();
+                    page.thumbnail = this.drawingEngine ? this.drawingEngine.getImageData(0.2) : '';
+
+                    await this.storage.savePage(page);
+                    this.showStatus('💾 Saved', 800);
+                } catch (err) {
+                    console.error('Save error:', err);
+                }
+            }
+
+            setMode(mode) {
+                this.mode = mode;
+                document.querySelectorAll('[data-mode]').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.mode === mode);
+                });
+
+                const drawTools = document.getElementById('drawTools');
+                const colorControl = document.getElementById('colorControl');
+                const sizeControl = document.getElementById('sizeControl');
+                const canvas = document.getElementById('pageCanvas');
+
+                if (mode === 'draw') {
+                    if (drawTools) drawTools.style.display = 'flex';
+                    if (colorControl) colorControl.style.display = 'flex';
+                    if (sizeControl) sizeControl.style.display = 'flex';
+                    if (canvas) canvas.style.cursor = 'crosshair';
+                    this.showStatus('✏️ Drawing mode', 800);
+                } else {
+                    if (drawTools) drawTools.style.display = 'none';
+                    if (colorControl) colorControl.style.display = 'none';
+                    if (sizeControl) sizeControl.style.display = 'none';
+                    if (canvas) canvas.style.cursor = 'default';
+                    this.showStatus('📝 Typing mode', 800);
+                }
+            }
+
+            setBrush(brush) {
+                if (this.drawingEngine) this.drawingEngine.brush = brush;
+                window.audio.playClick();
+            }
+
+            setBrushColor(color) {
+                if (this.drawingEngine) this.drawingEngine.color = color;
+            }
+
+            setBrushSize(size) {
+                if (this.drawingEngine) this.drawingEngine.size = parseFloat(size);
+            }
+
+            undo() {
+                if (this.drawingEngine) this.drawingEngine.undo();
+            }
+
+            redo() {
+                if (this.drawingEngine) this.drawingEngine.redo();
+            }
+
+            async savePagePNG() {
+                try {
+                    if (!this.currentPageId || !this.drawingEngine) return;
+                    const link = document.createElement('a');
+                    link.href = this.drawingEngine.getImageData(2);
+                    link.download = `${this.coverText.toUpperCase()}-page-${this.currentPageIndex + 1}.png`;
+                    link.click();
+                    this.showStatus('🖼️ PNG exported', 1200);
+                    window.audio.playSave();
+                } catch (err) {
+                    console.error('PNG export error:', err);
+                }
+            }
+
+            async exportPDF() {
+                try {
+                    if (this.pages.length === 0) {
+                        this.showStatus('No pages to export');
+                        return;
+                    }
+
+                    this.showStatus('📄 Generating PDF...');
+
+                    if (!window.jspdf) {
+                        this.showStatus('Loading...');
+                        return;
+                    }
+
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF('p', 'mm', 'a4');
+                    const pageWidth = pdf.internal.pageSize.getWidth();
+                    const pageHeight = pdf.internal.pageSize.getHeight();
+
+                    for (let i = 0; i < Math.min(this.pages.length, 50); i++) {
+                        const page = this.pages[i];
+                        const imgData = page.thumbnail || '';
+
+                        if (i > 0) pdf.addPage();
+                        if (imgData) {
+                            pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pageHeight);
+                        }
+                        pdf.setFontSize(10);
+                        pdf.text(`${i + 1}`, pageWidth - 20, pageHeight - 10);
+                    }
+
+                    pdf.save(`${this.coverText.toLowerCase()}-diary.pdf`);
+                    this.showStatus('📄 PDF exported', 1200);
+                    window.audio.playSave();
+                } catch (err) {
+                    console.error('PDF export error:', err);
+                }
+            }
+
+            async exportJSON() {
+                try {
+                    const allPages = await this.storage.getAllPages();
+                    const data = JSON.stringify(allPages, null, 2);
+                    const blob = new Blob([data], { type: 'application/json' });
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = `${this.coverText.toLowerCase()}-backup-${Date.now()}.json`;
+                    link.click();
+                    this.showStatus('💾 Backup exported', 1200);
+                    window.audio.playSave();
+                } catch (err) {
+                    console.error('JSON export error:', err);
+                }
+            }
+
+            async importJSON() {
+                try {
+                    const fileInput = document.getElementById('importFile');
+                    const file = fileInput.files[0];
+                    if (!file) return;
+
+                    const reader = new FileReader();
+                    reader.onload = async (e) => {
+                        try {
+                            const imported = JSON.parse(e.target.result);
+                            if (!Array.isArray(imported)) {
+                                this.showStatus('Invalid format');
+                                return;
+                            }
+
+                            for (const page of imported) {
+                                page.id = Date.now().toString() + Math.random().toString(36).substr(2, 9);
+                                await this.storage.savePage(page);
+                            }
+
+                            this.pages = await this.storage.getAllPages();
+                            this.renderPageList();
+                            document.getElementById('importModal').classList.remove('active');
+                            fileInput.value = '';
+                            this.showStatus('✓ Imported', 1200);
+                            window.audio.playSave();
+                        } catch (err) {
+                            this.showStatus('Import failed');
+                        }
+                    };
+                    reader.readAsText(file);
+                } catch (err) {
+                    console.error('Import error:', err);
+                }
+            }
+
+            async nextPage() {
+                const idx = this.pages.findIndex(p => p.id === this.currentPageId);
+                if (idx < this.pages.length - 1) {
+                    window.audio.playPageTurn();
+                    gsap.to(document.querySelector('.page-canvas-wrapper'), { duration: 0.3, opacity: 0, x: -50 });
+                    await new Promise(r => setTimeout(r, 300));
+                    await this.openPage(this.pages[idx + 1].id);
+                }
+            }
+
+            async previousPage() {
+                const idx = this.pages.findIndex(p => p.id === this.currentPageId);
+                if (idx > 0) {
+                    window.audio.playPageTurn();
+                    gsap.to(document.querySelector('.page-canvas-wrapper'), { duration: 0.3, opacity: 0, x: 50 });
+                    await new Promise(r => setTimeout(r, 300));
+                    await this.openPage(this.pages[idx - 1].id);
+                }
+            }
+
+            toggleLibrary() {
+                const lib = document.getElementById('libraryView');
+                if (!lib) return;
+
+                lib.classList.toggle('active');
+                gsap.to(lib, { duration: 0.5, opacity: lib.classList.contains('active') ? 1 : 0 });
+
+                if (lib.classList.contains('active')) {
+                    this.renderLibrary();
+                    document.getElementById('sidebar').classList.remove('open');
+                }
+            }
+
+            openCoverCustomizer() {
+                const customizer = document.getElementById('coverCustomizer');
+                if (customizer) {
+                    customizer.classList.add('active');
+                    window.audio.playClick();
+                }
+            }
+
+            renderPageList() {
+                const pageList = document.getElementById('pageList');
+                if (!pageList) return;
+
+                pageList.innerHTML = '';
+
+                for (const page of this.pages.slice(0, 30)) {
+                    const item = document.createElement('div');
+                    item.className = 'page-item' + (page.id === this.currentPageId ? ' active' : '');
+                    item.innerHTML = `
+                        <div class="page-item-title">${page.title || 'Untitled'}</div>
+                        <div class="page-item-date">${new Date(page.updatedAt || page.createdAt).toLocaleDateString()}</div>
+                    `;
+                    item.addEventListener('click', () => {
+                        this.openPage(page.id);
+                        document.getElementById('sidebar').classList.remove('open');
+                    });
+                    pageList.appendChild(item);
+                }
+            }
+
+            renderLibrary() {
+                const grid = document.getElementById('libraryGrid');
+                if (!grid) return;
+
+                grid.innerHTML = '';
+
+                for (const page of this.pages) {
+                    const thumb = document.createElement('div');
+                    thumb.className = 'page-thumbnail';
+                    if (page.thumbnail) {
+                        const img = document.createElement('img');
+                        img.src = page.thumbnail;
+                        img.alt = page.title || 'Page';
+                        thumb.appendChild(img);
+                        const overlay = document.createElement('div');
+                        overlay.className = 'page-thumbnail-overlay';
+                        overlay.textContent = page.title || 'Untitled';
+                        thumb.appendChild(overlay);
+                    } else {
+                        thumb.style.background = 'rgba(212, 165, 116, 0.1)';
+                        thumb.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:2.5rem;">${(page.title || 'P')[0]}</div>`;
+                    }
+                    thumb.addEventListener('click', () => {
+                        this.toggleLibrary();
+                        this.openPage(page.id);
+                    });
+                    grid.appendChild(thumb);
+                }
+            }
+
+            showStatus(msg, duration = 1500) {
+                const indicator = document.getElementById('statusIndicator');
+                if (!indicator) return;
+
+                indicator.textContent = msg;
+                indicator.classList.add('visible');
+                setTimeout(() => {
+                    indicator.classList.remove('visible');
+                }, duration);
+            }
+
+            startApp() {
+                const landing = document.getElementById('landing');
+                const app = document.getElementById('app');
+                if (landing) landing.classList.add('hidden');
+                if (app) app.style.display = 'flex';
+                this.init();
+            }
+        }
+
+        // ========== STARFIELD ==========
+        function initStarfield() {
+            try {
+                const canvas = document.getElementById('starfield');
+                if (!canvas) return;
+
+                const ctx = canvas.getContext('2d');
+                if (!ctx) return;
+
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+
+                const stars = [];
+                for (let i = 0; i < 250; i++) {
+                    stars.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        radius: Math.random() * 1.5,
+                        opacity: Math.random() * 0.6 + 0.3,
+                    });
+                }
+
+                function animate() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = 'rgba(244, 228, 193, 0.9)';
+
+                    for (const star of stars) {
+                        ctx.globalAlpha = star.opacity;
+                        ctx.beginPath();
+                        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        star.opacity += (Math.random() - 0.5) * 0.08;
+                        star.opacity = Math.max(0.2, Math.min(0.8, star.opacity));
+                    }
+
+                    requestAnimationFrame(animate);
+                }
+
+                animate();
+
+                window.addEventListener('resize', () => {
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                });
+            } catch (err) {
+                console.error('Starfield error:', err);
+            }
+        }
+
+        // ========== INIT ==========
+        window.app = new DiaryApp();
+        window.audio = new AudioEngine();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initStarfield();
+            const enterBtn = document.getElementById('enterBtn');
+            if (enterBtn) {
+                enterBtn.addEventListener('click', () => {
+                    window.audio.playClick();
+                    window.app.startApp();
+                });
+            }
+        });
+
+        if (document.readyState !== 'loading') {
+            initStarfield();
+        }
     </script>
 </body>
 </html>
