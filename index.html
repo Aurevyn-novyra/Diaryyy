@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content="Premium Luxury Diary with extreme realism and unlimited customization" />
+    <title>Luxury Diary - Extreme Edition</title>
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@400;500;600;700&family=Cinzel:wght@400;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --gold-dark: #d4a574;
+            --gold-light: #f4e4c1;
+            --burgundy-dark: #5c2e3a;
+            --burgundy-light: #8b4a5a;
+            --ivory: #f5f3f0;
+            --cream: #fefdfb;
+            --charcoal: #1a1a1a;
+            --black-luxe: #0f0f0f;
+
+            --font-serif: 'Playfair Display', serif;
+            --font-elegant: 'Cormorant Garamond', serif;
+            --font-cinzel: 'Cinzel', serif;
+            --font-baskerville: 'Libre Baskerville', serif;
+            --font-sans: 'Inter', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; width: 100%; overflow: hidden; font-family: var(--font-sans); background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%); color: var(--charcoal); -webkit-font-smoothing: antialiased; perspective: 1200px; }
+
+        /* LANDING */
+        #landing{ position: fixed; inset:0; display:flex; align-items:center; justify-content:center; background: radial-gradient(ellipse at center, #2a2a3a 0%, #0f0f1a 100%); z-index:1000; flex-direction:column; transition: opacity .8s ease; }
+        #landing.hidden{ pointer-events:none; opacity:0; }
+        .landing-content{ text-align:center; color:white; padding:3rem; border-radius:16px; border:1px solid rgba(212,165,116,0.25); background: rgba(0,0,0,0.35); backdrop-filter: blur(6px); }
+        .landing-icon{ font-size:4rem; margin-bottom:1rem; }
+        .landing-title{ font-family:var(--font-serif); font-size:2.2rem; background:linear-gradient(135deg,var(--gold-light),var(--gold-dark)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:.5rem; }
+        .landing-subtitle{ font-family:var(--font-elegant); color:rgba(244,228,193,.85); margin-bottom:1.5rem; }
+        .landing-btn{ padding: .9rem 2rem; border-radius:40px; border:2px solid var(--gold-dark); background:linear-gradient(135deg,var(--gold-dark),var(--gold-light)); color:var(--black-luxe); cursor:pointer; font-weight:700; }
+
+        /* APP */
+        #app{ display:none; width:100%; height:100%; position:relative; overflow:hidden; }
+        .book-viewer{ width:100%; height:100%; display:flex; align-items:center; justify-content:center; perspective:1500px; position:relative; }
+
+        .book-3d-container{ width:600px; height:800px; max-width:90%; max-height:90vh; position:relative; transform-style:preserve-3d; }
+
+        .book-cover{
+            width:100%; height:100%; border-radius:12px; position:absolute; display:flex; align-items:center; justify-content:center; flex-direction:column; padding:40px; text-align:center; color:white; z-index:10;
+            background: linear-gradient(135deg,#4a3f35 0%, #3d3530 50%, #2d2620 100%); cursor:pointer; box-shadow: 0 30px 100px rgba(0,0,0,.6), 0 0 60px rgba(212,165,116,.12); transform-style:preserve-3d;
+        }
+        .cover-emboss{ font-family:var(--font-serif); font-size:2.6rem; font-weight:900; letter-spacing:2px; background:linear-gradient(135deg,var(--gold-light),var(--gold-dark)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; z-index:4;}
+        .cover-subtitle{ font-family:var(--font-elegant); margin-top:10px; color:var(--gold-light); z-index:4; }
+
+        .book-pages{ width:100%; height:100%; position:absolute; border-radius:12px; overflow:hidden; background:transparent; display:none; transform-style:preserve-3d; z-index:5; }
+
+        .book-pages.show{ display:block; }
+
+        .pages-container{ width:100%; height:100%; position:relative; }
+
+        /* realistic paper */
+        .page-background{ position:absolute; inset:0; border-radius:8px; background:linear-gradient(135deg,#fefdfb,#f9f7f5); box-shadow: 0 30px 80px rgba(0,0,0,.35); z-index:0; }
+
+        .page-binding{ position:absolute; left:0; top:0; width:20px; height:100%; background:linear-gradient(90deg,#3d3530,#2d2620); z-index:6; }
+
+        .page-canvas-wrapper{ position:relative; left:20px; top:0; width:calc(100% - 20px); height:100%; border-radius:0 8px 8px 0; overflow:hidden; }
+        #pageCanvas{ display:block; width:100%; height:100%; touch-action:none; cursor:crosshair; background:transparent; }
+
+        .page-text-layer{ position:absolute; top:40px; left:60px; right:40px; bottom:60px; font-size:1rem; line-height:1.7; color:var(--charcoal); overflow-y:auto; white-space:pre-wrap; font-family:var(--font-elegant); z-index:8; background:transparent; outline:none; }
+
+        .page-number{ position:absolute; right:35px; bottom:30px; font-family:var(--font-serif); color:var(--gold-dark); font-weight:700; z-index:9; }
+
+        .page-flip-zone{ position:absolute; right:0; bottom:0; width:160px; height:160px; cursor:grab; z-index:20; background:transparent; }
+
+        /* toolbar */
+        .toolbar{ position:fixed; bottom:25px; left:50%; transform:translateX(-50%); padding:.9rem 1.6rem; display:flex; gap:.75rem; border-radius:50px; background:linear-gradient(135deg, rgba(42,37,32,0.95), rgba(31,26,21,0.95)); border:1.5px solid rgba(212,165,116,.25); z-index:60; }
+        .toolbar-btn{ padding:.5rem .9rem; border-radius:6px; background:rgba(212,165,116,.06); border:1px solid rgba(212,165,116,.18); color:var(--gold-light); cursor:pointer; font-weight:600; }
+        .toolbar input[type="color"]{ padding:0; border-radius:6px; width:40px; height:36px; border:1px solid rgba(212,165,116,.18); cursor:pointer; }
+
+        /* sidebar */
+        .sidebar{ position:fixed; left:0; top:0; width:320px; height:100%; background:linear-gradient(180deg,#2a2520,#1f1a15); transform:translateX(-100%); transition:transform .45s; z-index:100; padding:1rem; display:flex; flex-direction:column; gap:1rem; }
+        .sidebar.open{ transform:translateX(0); }
+        .sidebar-header{ display:flex; justify-content:space-between; align-items:center; padding:.5rem 0; color:var(--gold-light); font-family:var(--font-serif); font-weight:700; }
+        .page-item{ padding:.9rem; border-radius:8px; cursor:pointer; background:linear-gradient(135deg, rgba(212,165,116,.04), rgba(212,165,116,.02)); border:1px solid rgba(212,165,116,.08); }
+        .sidebar-actions{ display:flex; gap:.6rem; flex-direction:column; }
+
+        .return-cover-btn{ position:fixed; top:20px; left:20px; width:52px; height:52px; border-radius:50%; display:none; align-items:center; justify-content:center; z-index:102; cursor:pointer; background:linear-gradient(135deg,var(--gold-dark),var(--gold-light)); color:var(--black-luxe); font-weight:700; border:none; }
+        .return-cover-btn.show{ display:flex; }
+
+        /* small screens */
+        @media (max-width:700px){
+            .book-3d-container{ width:320px; height:450px; }
+            .landing-title{ font-size:1.5rem; }
+            .landing-content{ padding:2rem; }
+            .sidebar{ width:260px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- LANDING -->
+    <div id="landing">
+        <canvas id="starfield" width="800" height="600" style="position:absolute; inset:0; width:100%; height:100%; z-index:-1;"></canvas>
+        <div class="landing-content" role="dialog" aria-modal="true">
+            <div class="landing-icon">📔</div>
+            <div class="landing-title">Luxury Diary — Extreme Edition</div>
+            <div class="landing-subtitle">Premium realism, unlimited customization</div>
+            <button class="landing-btn" id="enterBtn" aria-label="Enter diary">Enter</button>
+        </div>
+    </div>
+
+    <!-- APP -->
+    <div id="app" aria-hidden="true">
+        <button class="return-cover-btn" id="backToCoverBtn" title="Return to cover">◀</button>
+
+        <div class="sidebar" id="sidebar" aria-hidden="true">
+            <div class="sidebar-header">
+                <div>Pages</div>
+                <button id="closeSidebar" title="Close sidebar" style="background:none;border:none;color:var(--gold-light);cursor:pointer;font-size:1.1rem;">✕</button>
+            </div>
+            <div id="pageList" style="overflow:auto; flex:1;"></div>
+            <div class="sidebar-actions">
+                <button class="toolbar-btn" id="addPageBtn">+ New Page</button>
+                <button class="toolbar-btn" id="deletePageBtn">Delete Page</button>
+                <button class="toolbar-btn" id="downloadPdfBtn">Export current page as PDF</button>
+            </div>
+        </div>
+
+        <div class="book-viewer" role="main">
+            <div class="book-3d-container" id="bookContainer" aria-live="polite">
+                <div class="book-cover" id="bookCover" role="button" tabindex="0" aria-label="Open book">
+                    <div class="cover-emboss">Luxury Diary</div>
+                    <div class="cover-subtitle">Extreme Edition</div>
+                </div>
+
+                <div class="book-pages" id="bookPages" aria-hidden="true">
+                    <div class="pages-container">
+                        <div class="page-background" aria-hidden="true"></div>
+                        <div class="page-binding" aria-hidden="true"></div>
+
+                        <div class="page-canvas-wrapper" id="pageWrapper" role="region" aria-label="Page canvas area">
+                            <canvas id="pageCanvas"></canvas>
+                            <div class="page-text-layer" id="pageText" contenteditable="true" aria-label="Write on the page"></div>
+                            <div class="page-number" id="pageNumber">1</div>
+                            <div class="page-flip-zone" id="flipZone" title="Flip page"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- toolbar -->
+        <div class="toolbar" role="toolbar" aria-label="Editor toolbar">
+            <div class="toolbar-group">
+                <button class="toolbar-btn" id="toggleSidebarBtn" title="Open pages">☰</button>
+                <button class="toolbar-btn" id="prevBtn" title="Previous page">◀</button>
+                <button class="toolbar-btn" id="nextBtn" title="Next page">▶</button>
+            </div>
+
+            <div class="toolbar-separator"></div>
+
+            <div class="toolbar-group">
+                <input type="color" id="penColor" value="#1a1a1a" title="Pen color" />
+                <input type="range" id="penSize" min="1" max="30" value="3" title="Pen size" />
+                <button class="toolbar-btn" id="eraserBtn" title="Eraser">Eraser</button>
+                <button class="toolbar-btn" id="clearBtn" title="Clear drawing">Clear</button>
+            </div>
+
+            <div class="toolbar-separator"></div>
+
+            <div class="toolbar-group">
+                <button class="toolbar-btn" id="saveImageBtn" title="Download page image">Download PNG</button>
+                <button class="toolbar-btn" id="downloadPdfBtnBottom" title="Export page to PDF">Export PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function () {
+        // Basic state
+        const landing = document.getElementById('landing');
+        const enterBtn = document.getElementById('enterBtn');
+        const app = document.getElementById('app');
+        const bookCover = document.getElementById('bookCover');
+        const bookPages = document.getElementById('bookPages');
+        const backToCoverBtn = document.getElementById('backToCoverBtn');
+        const sidebar = document.getElementById('sidebar');
+        const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const pageList = document.getElementById('pageList');
+        const addPageBtn = document.getElementById('addPageBtn');
+        const deletePageBtn = document.getElementById('deletePageBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+        const downloadPdfBtnBottom = document.getElementById('downloadPdfBtnBottom');
+        const saveImageBtn = document.getElementById('saveImageBtn');
+
+        const pageCanvas = document.getElementById('pageCanvas');
+        const pageWrapper = document.getElementById('pageWrapper');
+        const pageText = document.getElementById('pageText');
+        const pageNumber = document.getElementById('pageNumber');
+        const flipZone = document.getElementById('flipZone');
+
+        const penColorInput = document.getElementById('penColor');
+        const penSizeInput = document.getElementById('penSize');
+        const eraserBtn = document.getElementById('eraserBtn');
+        const clearBtn = document.getElementById('clearBtn');
+
+        const starfield = document.getElementById('starfield');
+
+        // pages data model
+        let pages = [];
+        let currentPageIndex = 0;
+
+        // drawing state
+        let ctx, isDrawing = false, lastX = 0, lastY = 0;
+        let penColor = penColorInput.value;
+        let penSize = parseInt(penSizeInput.value, 10);
+        let isEraser = false;
+
+        // utils: safe access to jsPDF
+        const getJsPDF = () => {
+            if (window.jspdf && window.jspdf.jsPDF) return window.jspdf.jsPDF;
+            if (window.jsPDF) return window.jsPDF;
+            // fallback: try to read from window.jspdf
+            return (window.jspdf && window.jspdf.jsPDF) || null;
+        };
+
+        // initialize canvas size to wrapper size and devicePixelRatio handling
+        function resizeCanvasToWrapper() {
+            const dpr = window.devicePixelRatio || 1;
+            const rect = pageWrapper.getBoundingClientRect();
+            pageCanvas.width = Math.max(800, Math.floor(rect.width * dpr)); // ensure decent resolution
+            pageCanvas.height = Math.max(1000, Math.floor(rect.height * dpr));
+            pageCanvas.style.width = rect.width + 'px';
+            pageCanvas.style.height = rect.height + 'px';
+            ctx = pageCanvas.getContext('2d', { alpha: true });
+            ctx.scale(dpr, dpr);
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            renderCurrentPage(); // re-render drawing from stored data
+        }
+
+        // manage pages (each page stores: text, drawing image dataURL)
+        function createPage(text = '', drawingData = null) {
+            pages.push({ text: text, drawing: drawingData });
+            currentPageIndex = pages.length - 1;
+            refreshPageList();
+            selectPage(currentPageIndex);
+            persistPages();
+        }
+
+        function deleteCurrentPage() {
+            if (pages.length <= 1) {
+                // clear current instead
+                pages[0] = { text: '', drawing: null };
+                selectPage(0);
+            } else {
+                pages.splice(currentPageIndex, 1);
+                currentPageIndex = Math.max(0, currentPageIndex - 1);
+                refreshPageList();
+                selectPage(currentPageIndex);
+            }
+            persistPages();
+        }
+
+        function refreshPageList() {
+            pageList.innerHTML = '';
+            pages.forEach((p, i) => {
+                const div = document.createElement('div');
+                div.className = 'page-item' + (i === currentPageIndex ? ' active' : '');
+                div.innerHTML = '<div class="page-item-title">Page ' + (i + 1) + '</div>' + '<div class="page-item-date" style="opacity:.6;font-size:.8rem">Saved</div>';
+                div.addEventListener('click', () => { selectPage(i); });
+                pageList.appendChild(div);
+            });
+        }
+
+        function selectPage(index) {
+            if (index < 0 || index >= pages.length) return;
+            currentPageIndex = index;
+            const page = pages[index];
+            pageText.innerText = page.text || '';
+            pageNumber.innerText = (index + 1);
+            // load drawing image if present
+            if (page.drawing) {
+                const img = new Image();
+                img.onload = function () {
+                    // clear and draw
+                    const dpr = window.devicePixelRatio || 1;
+                    ctx.save();
+                    ctx.setTransform(1,0,0,1,0,0); // reset transform
+                    ctx.clearRect(0,0,pageCanvas.width, pageCanvas.height);
+                    ctx.restore();
+                    // draw image scaled to canvas CSS size
+                    const rect = pageWrapper.getBoundingClientRect();
+                    // draw onto canvas accounting for dpr scaling
+                    const tmpCtx = pageCanvas.getContext('2d');
+                    tmpCtx.save();
+                    tmpCtx.setTransform(dpr,0,0,dpr,0,0);
+                    tmpCtx.drawImage(img, 0, 0, rect.width, rect.height);
+                    tmpCtx.restore();
+                };
+                img.src = page.drawing;
+            } else {
+                // clear canvas
+                clearDrawing(false);
+            }
+            refreshPageList();
+        }
+
+        function persistPages() {
+            try {
+                localStorage.setItem('luxury_diary_pages_v1', JSON.stringify(pages));
+            } catch (e) {
+                // ignore localStorage errors
+            }
+        }
+
+        function loadPages() {
+            try {
+                const raw = localStorage.getItem('luxury_diary_pages_v1');
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (Array.isArray(parsed) && parsed.length) {
+                        pages = parsed;
+                        currentPageIndex = 0;
+                        refreshPageList();
+                        selectPage(0);
+                        return;
+                    }
+                }
+            } catch (e) {
+                // ignore parse errors
+            }
+            // default initial page
+            pages = [{ text: 'Dear Diary,\n\nStart writing here...', drawing: null }];
+        }
+
+        // drawing functions
+        function setPen() {
+            ctx.globalCompositeOperation = isEraser ? 'destination-out' : 'source-over';
+            ctx.strokeStyle = isEraser ? 'rgba(0,0,0,1)' : penColor;
+            ctx.lineWidth = penSize;
+        }
+
+        function startDrawing(x, y) {
+            isDrawing = true;
+            lastX = x;
+            lastY = y;
+            setPen();
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+        }
+
+        function drawTo(x, y) {
+            if (!isDrawing) return;
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            lastX = x;
+            lastY = y;
+        }
+
+        function stopDrawing() {
+            if (!isDrawing) return;
+            isDrawing = false;
+            ctx.closePath();
+            saveDrawingToCurrentPage();
+        }
+
+        function clearDrawing(save = true) {
+            const rect = pageWrapper.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            // clear entire canvas in device pixels
+            ctx.save();
+            ctx.setTransform(1,0,0,1,0,0);
+            ctx.clearRect(0,0,pageCanvas.width, pageCanvas.height);
+            ctx.restore();
+            if (save) {
+                pages[currentPageIndex].drawing = null;
+                persistPages();
+            }
+        }
+
+        function saveDrawingToCurrentPage() {
+            // capture the canvas visible area as dataURL
+            // Use toDataURL on canvas element but ensure we capture at displayed resolution
+            const rect = pageWrapper.getBoundingClientRect();
+            // create temporary canvas at CSS px size and draw scaled content
+            const tmp = document.createElement('canvas');
+            tmp.width = rect.width;
+            tmp.height = rect.height;
+            const tmpCtx = tmp.getContext('2d');
+            // draw current pageCanvas image scaled down to CSS px
+            tmpCtx.drawImage(pageCanvas, 0, 0, tmp.width, tmp.height);
+            pages[currentPageIndex].drawing = tmp.toDataURL('image/png');
+            persistPages();
+        }
+
+        // render current drawing data (mainly used on resize)
+        function renderCurrentPage() {
+            // if page has a drawing (data URL) draw it; else clear
+            const p = pages[currentPageIndex];
+            if (p && p.drawing) {
+                const img = new Image();
+                img.onload = function() {
+                    const rect = pageWrapper.getBoundingClientRect();
+                    const dpr = window.devicePixelRatio || 1;
+                    const tmpCtx = pageCanvas.getContext('2d');
+                    tmpCtx.save();
+                    tmpCtx.setTransform(dpr,0,0,dpr,0,0);
+                    tmpCtx.clearRect(0,0,rect.width,rect.height);
+                    tmpCtx.drawImage(img, 0, 0, rect.width, rect.height);
+                    tmpCtx.restore();
+                };
+                img.src = p.drawing;
+            } else {
+                // clear at device resolution
+                const dpr = window.devicePixelRatio || 1;
+                ctx.save();
+                ctx.setTransform(1,0,0,1,0,0);
+                ctx.clearRect(0,0,pageCanvas.width, pageCanvas.height);
+                ctx.restore();
+            }
+        }
+
+        // starfield background simple effect
+        function renderStarfield() {
+            const c = starfield;
+            const ctxS = c.getContext('2d');
+            function resize() {
+                c.width = c.clientWidth * (window.devicePixelRatio || 1);
+                c.height = c.clientHeight * (window.devicePixelRatio || 1);
+                ctxS.setTransform(window.devicePixelRatio || 1, 0, 0, window.devicePixelRatio || 1, 0, 0);
+            }
+            resize();
+            let stars = [];
+            function makeStars() {
+                stars = [];
+                const count = Math.max(60, Math.floor((c.width / 2) / 6));
+                for (let i = 0; i < count; i++) {
+                    stars.push({
+                        x: Math.random() * c.clientWidth,
+                        y: Math.random() * c.clientHeight,
+                        r: Math.random() * 1.6 + 0.2,
+                        a: Math.random() * 0.8 + 0.2,
+                        s: Math.random() * 0.02 + 0.005
+                    });
+                }
+            }
+            makeStars();
+            function loop() {
+                ctxS.clearRect(0,0,c.width,c.height);
+                ctxS.fillStyle = '#0b0b0b';
+                ctxS.fillRect(0,0,c.clientWidth,c.clientHeight);
+                stars.forEach(st => {
+                    ctxS.beginPath();
+                    ctxS.fillStyle = 'rgba(255,255,255,' + st.a + ')';
+                    ctxS.arc(st.x, st.y, st.r, 0, Math.PI * 2);
+                    ctxS.fill();
+                    st.a += st.s;
+                    if (st.a <= 0.1 || st.a > 1.0) st.s = -st.s;
+                });
+                requestAnimationFrame(loop);
+            }
+            window.addEventListener('resize', () => { resize(); makeStars(); });
+            loop();
+        }
+
+        // export functions
+        async function exportCurrentPageToImage() {
+            // use html2canvas on the wrapper region for highest fidelity (includes text and canvas)
+            const rect = pageWrapper.getBoundingClientRect();
+            // temporarily ensure pageWrapper background is white for export fidelity
+            const originalBg = pageWrapper.style.backgroundColor;
+            pageWrapper.style.backgroundColor = '#ffffff';
+            const canvas = await html2canvas(pageWrapper, { backgroundColor: null, scale: Math.min(2, window.devicePixelRatio || 1) });
+            pageWrapper.style.backgroundColor = originalBg;
+            return canvas.toDataURL('image/png');
+        }
+
+        async function exportCurrentPageToPdf() {
+            const dataUrl = await exportCurrentPageToImage();
+            const img = new Image();
+            img.src = dataUrl;
+            await new Promise((res) => { img.onload = res; });
+            const { jsPDF } = window.jspdf || {};
+            const JsPDF = getJsPDF();
+            if (!JsPDF) {
+                alert('PDF library not loaded.');
+                return;
+            }
+            // create PDF with page size matching image aspect (use A4 orientation if needed)
+            const pdf = new JsPDF({
+                unit: 'px',
+                format: [img.width, img.height]
+            });
+            pdf.addImage(img, 'PNG', 0, 0, img.width, img.height);
+            pdf.save('page-' + (currentPageIndex + 1) + '.pdf');
+        }
+
+        // download PNG
+        async function downloadCurrentPagePNG() {
+            const dataUrl = await exportCurrentPageToImage();
+            const a = document.createElement('a');
+            a.href = dataUrl;
+            a.download = 'page-' + (currentPageIndex + 1) + '.png';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        }
+
+        // EVENTS & INTERACTIONS
+        function wireEvents() {
+            // landing
+            enterBtn.addEventListener('click', () => {
+                landing.classList.add('hidden');
+                setTimeout(() => {
+                    landing.style.display = 'none';
+                }, 900);
+                app.style.display = 'block';
+                app.setAttribute('aria-hidden', 'false');
+                // animate open
+                gsap.fromTo('#bookContainer', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .9, ease: 'power3.out' });
+            });
+
+            // open book
+            function openBook() {
+                bookCover.style.pointerEvents = 'none';
+                gsap.to(bookCover, { opacity: 0, y: -40, duration: .6, ease: 'power2.in', onComplete: () => {
+                    bookCover.style.display = 'none';
+                    bookPages.classList.add('show');
+                    backToCoverBtn.classList.add('show');
+                }});
+            }
+            bookCover.addEventListener('click', openBook);
+            bookCover.addEventListener('keydown', (e) => { if (e.key === 'Enter') openBook(); });
+
+            // back to cover
+            backToCoverBtn.addEventListener('click', () => {
+                bookPages.classList.remove('show');
+                bookCover.style.display = '';
+                gsap.fromTo(bookCover, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .6, ease: 'power2.out' });
+                backToCoverBtn.classList.remove('show');
+            });
+
+            // sidebar toggle
+            toggleSidebarBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+            });
+            closeSidebar.addEventListener('click', () => { sidebar.classList.remove('open'); });
+
+            // paging
+            prevBtn.addEventListener('click', () => {
+                if (currentPageIndex > 0) selectPage(currentPageIndex - 1);
+            });
+            nextBtn.addEventListener('click', () => {
+                if (currentPageIndex < pages.length - 1) selectPage(currentPageIndex + 1);
+            });
+
+            // add/delete page
+            addPageBtn.addEventListener('click', () => { createPage('', null); });
+            deletePageBtn.addEventListener('click', () => {
+                if (confirm('Delete this page?')) deleteCurrentPage();
+            });
+
+            // flip zone quick flip (go to next)
+            flipZone.addEventListener('click', () => {
+                if (currentPageIndex < pages.length - 1) selectPage(currentPageIndex + 1);
+                else createPage('', null);
+            });
+
+            // pen controls
+            penColorInput.addEventListener('input', (e) => { penColor = e.target.value; });
+            penSizeInput.addEventListener('input', (e) => { penSize = parseInt(e.target.value, 10); });
+
+            eraserBtn.addEventListener('click', () => {
+                isEraser = !isEraser;
+                eraserBtn.classList.toggle('active', isEraser);
+                eraserBtn.textContent = isEraser ? 'Pen' : 'Eraser';
+            });
+
+            clearBtn.addEventListener('click', () => {
+                if (confirm('Clear drawings on this page?')) clearDrawing(true);
+            });
+
+            // save image / pdf
+            saveImageBtn.addEventListener('click', downloadCurrentPagePNG);
+            downloadPdfBtn.addEventListener('click', exportCurrentPageToPdf);
+            downloadPdfBtnBottom.addEventListener('click', exportCurrentPageToPdf);
+
+            // drawing pointer events
+            function getCanvasPosFromEvent(e) {
+                const rect = pageCanvas.getBoundingClientRect();
+                const x = (e.clientX - rect.left);
+                const y = (e.clientY - rect.top);
+                return { x, y };
+            }
+
+            // support pointer events (works for mouse, touch, stylus)
+            pageCanvas.addEventListener('pointerdown', (ev) => {
+                ev.preventDefault();
+                const pos = getCanvasPosFromEvent(ev);
+                // adjust for dpr scaling inside ctx since we scaled context
+                startDrawing(pos.x, pos.y);
+            });
+
+            window.addEventListener('pointermove', (ev) => {
+                if (!isDrawing) return;
+                const pos = getCanvasPosFromEvent(ev);
+                drawTo(pos.x, pos.y);
+            });
+
+            window.addEventListener('pointerup', (ev) => {
+                stopDrawing();
+            });
+
+            // keep text changes in model
+            pageText.addEventListener('input', () => {
+                pages[currentPageIndex].text = pageText.innerText;
+                persistPages();
+            });
+
+            // delete page via keyboard
+            window.addEventListener('keydown', (e) => {
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+                    e.preventDefault();
+                    persistPages();
+                    alert('Saved locally.');
+                }
+            });
+
+            // save drawing when leaving page area
+            pageWrapper.addEventListener('mouseleave', stopDrawing);
+
+            // download via bottom PDF button inside sidebar
+            downloadPdfBtn.addEventListener('click', exportCurrentPageToPdf);
+        }
+
+        // on window resize handle canvas resizing
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(resizeCanvasToWrapper, 150);
+        });
+
+        // persist text when switching pages
+        // before unload, save text and drawing
+        window.addEventListener('beforeunload', () => {
+            pages[currentPageIndex].text = pageText.innerText;
+            saveDrawingToCurrentPage();
+            persistPages();
+        });
+
+        // initialize everything
+        function init() {
+            renderStarfield();
+            loadPages();
+            refreshPageList();
+            // attach events
+            wireEvents();
+
+            // ensure app hidden until landing dismissed
+            // prepare canvas when book shown
+            const observer = new MutationObserver((mutations) => {
+                for (const m of mutations) {
+                    if (m.type === 'attributes' && m.attributeName === 'class') {
+                        if (bookPages.classList.contains('show')) {
+                            // delay sizing a bit to allow layout / fonts
+                            setTimeout(() => {
+                                resizeCanvasToWrapper();
+                                selectPage(currentPageIndex);
+                            }, 250);
+                        }
+                    }
+                }
+            });
+            observer.observe(bookPages, { attributes: true });
+
+            // initial canvas setup even if book not open (for responsiveness)
+            setTimeout(() => {
+                resizeCanvasToWrapper();
+            }, 100);
+
+            // show first page if app shown (helpful on reload)
+            selectPage(currentPageIndex);
+        }
+
+        // run
+        document.addEventListener('DOMContentLoaded', init, { once: true });
+    })();
+    </script>
+</body>
+</html>
