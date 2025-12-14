@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Premium Luxury Diary with extreme realism and unlimited customization">
-    <title>UniCorn Diaryy - By Priyanshuuu</title>
+    <meta name="description" content=" Unicorn theme Diaryyy by Priyanshuuu ">
+    <title>UniCorn Diaryy - Mastii Edition</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -205,100 +205,79 @@
             filter: drop-shadow(0 40px 120px rgba(0, 0, 0, 0.7)) drop-shadow(0 0 100px rgba(212, 165, 116, 0.15));
         }
 
-    <div class="book-cover">
-    <div class="title-layer">
-        <h1 class="book-title">UniCorn Diary</h1>
-        <p class="book-subtitle">By Priyanshuuu</p>
-    </div>
-</div>
-.book-cover {
-    position: relative;
+    .book-cover {
     width: 100%;
     height: 100%;
     border-radius: 12px;
-    overflow: hidden;
-
-    /* 🔒 SAME BACKGROUND */
-    background: url("generated-image.png") center/cover no-repeat;
-
-    box-shadow:
-        0 30px 100px rgba(0,0,0,.6),
-        inset 0 0 30px rgba(0,0,0,.4);
-}
-
-/* 🧱 TEXT ISOLATION LAYER */
-.title-layer {
     position: absolute;
-    inset: 0;
-    z-index: 20;
-
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
+    padding: 40px;
+    text-align: center;
+    color: white;
+    opacity: 1;
+    z-index: 10;
+    overflow: hidden;
 
-    /* 🚫 BLOCK ALL BLUR INHERITANCE */
-    filter: none !important;
-    backdrop-filter: none !important;
-    transform: translateZ(0);
+    /* ðŸ¦„ YOUR UNICORN COVER */
+    background-image: url("generated-image.png");
+    background-size: cover;
+    background-position: center;
+
+    transform-style: preserve-3d;
+    box-shadow: 
+        0 30px 100px rgba(0, 0, 0, 0.6),
+        0 0 60px rgba(212, 165, 116, 0.15),
+        inset -3px -3px 15px rgba(0, 0, 0, 0.4),
+        inset 3px 3px 15px rgba(255, 255, 255, 0.08),
+        inset -1px -1px 2px rgba(0, 0, 0, 0.8),
+        inset 1px 1px 2px rgba(255, 255, 255, 0.15);
 }
 
-/* 🧠 SHARP TITLE */
-.book-title {
-    font-size: 44px;
-    letter-spacing: 6px;
-    font-weight: 700;
-    color: #111;
+        /* REALISTIC LEATHER TEXTURES */
+        .book-cover::before { background-image: url("generated-image.png") !important;
+background-size: cover !important;
+background-position: center !important;
 
-    /* ❌ REMOVE BLUR COMPLETELY */
-    filter: none !important;
-    backdrop-filter: none !important;
-
-    /* ✅ FORCE CRISP TEXT */
-    text-rendering: geometricPrecision;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-
-    /* ✨ READABILITY */
-    background: rgba(255, 235, 200, 0.85);
-    padding: 14px 32px;
-    border-radius: 14px;
-
-    box-shadow:
-        0 6px 20px rgba(0,0,0,.35);
-}
-
-/* SUBTITLE */
-.book-subtitle {
-    margin-top: 12px;
-    font-size: 16px;
-    letter-spacing: 2px;
-    color: #2b1d0f;
-
-    background: rgba(255, 240, 215, 0.75);
-    padding: 6px 16px;
-    border-radius: 10px;
-}
-
-/* 🦄 TEXTURE SAFE */
-.book-cover::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 5;
-
-    background:
-        repeating-linear-gradient(
-            0deg,
-            rgba(0,0,0,0.04) 0px,
-            rgba(0,0,0,0.04) 1px,
-            transparent 1px,
-            transparent 3px
-        );
-    pointer-events: none;
-}
-
-
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(
+                    90deg,
+                    transparent 0px,
+                    transparent 2px,
+                    rgba(255, 255, 255, 0.03) 2px,
+                    rgba(255, 255, 255, 0.03) 4px
+                ),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent 0px,
+                    transparent 1px,
+                    rgba(0, 0, 0, 0.05) 1px,
+                    rgba(0, 0, 0, 0.05) 2px
+                ),
+                radial-gradient(
+                    circle at 20% 80%,
+                    rgba(255, 255, 255, 0.1) 0%,
+                    transparent 50%
+                ),
+                radial-gradient(
+                    circle at 80% 20%,
+                    rgba(0, 0, 0, 0.15) 0%,
+                    transparent 50%
+                );
+            pointer-events: none;
+            border-radius: 12px;
+            z-index: 2;
+        }
 
         .book-cover::after {
             content: '';
@@ -320,7 +299,7 @@
             font-weight: 900;
             letter-spacing: 3px;
             -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-text-fill-color: opaque;
             filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.6)) drop-shadow(1px 1px 2px rgba(255, 255, 255, 0.2));
             text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.7);
         }
@@ -1593,40 +1572,40 @@
             <canvas id="starfield"></canvas>
         </div>
         <div class="landing-content">
-            <div class="landing-icon">📖</div>
+            <div class="landing-icon">ðŸ“–</div>
             <h1 class="landing-title">MEMENTO</h1>
             <p class="landing-subtitle">Ultimate Luxury Diary Experience</p>
-            <button class="landing-btn" id="enterBtn">ENTER YOUR SANCTUARY ✨</button>
+            <button class="landing-btn" id="enterBtn">ENTER YOUR SANCTUARY âœ¨</button>
         </div>
     </div>
 
     <!-- MAIN APP -->
     <div id="app">
         <!-- RETURN TO COVER BUTTON -->
-        <button class="return-cover-btn" id="returnCoverBtn" title="Return to cover">📖</button>
+        <button class="return-cover-btn" id="returnCoverBtn" title="Return to cover">ðŸ“–</button>
 
         <!-- SIDEBAR -->
         <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <div class="sidebar-title">📖 Pages</div>
-                <button class="sidebar-close" id="sidebarClose">✕</button>
+                <div class="sidebar-title">ðŸ“– Pages</div>
+                <button class="sidebar-close" id="sidebarClose">âœ•</button>
             </div>
             <div class="sidebar-content" id="pageList"></div>
             <div class="sidebar-actions">
-                <button class="action-btn" id="newPageBtn">✨ New Page</button>
-                <button class="action-btn" id="customizeBtn">🎨 Cover</button>
-                <button class="action-btn" id="libraryBtn">📚 Library</button>
-                <button class="action-btn" id="exportPdfBtn">📄 PDF</button>
-                <button class="action-btn" id="exportJsonBtn">💾 Backup</button>
-                <button class="action-btn" id="importJsonBtn">📂 Import</button>
+                <button class="action-btn" id="newPageBtn">âœ¨ New Page</button>
+                <button class="action-btn" id="customizeBtn">ðŸŽ¨ Cover</button>
+                <button class="action-btn" id="libraryBtn">ðŸ“š Library</button>
+                <button class="action-btn" id="exportPdfBtn">ðŸ“„ PDF</button>
+                <button class="action-btn" id="exportJsonBtn">ðŸ’¾ Backup</button>
+                <button class="action-btn" id="importJsonBtn">ðŸ“‚ Import</button>
             </div>
         </div>
 
         <!-- SIDEBAR TOGGLE -->
-        <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+        <button class="sidebar-toggle" id="sidebarToggle">â˜°</button>
 
         <!-- SOUND TOGGLE -->
-        <button class="sound-toggle" id="soundToggle">🔊</button>
+        <button class="sound-toggle" id="soundToggle">ðŸ”Š</button>
 
         <!-- BOOK VIEWER -->
         <div class="book-viewer">
@@ -1642,7 +1621,7 @@
                     <div class="cover-subtitle" id="coverSubtitle">My Diary</div>
                     <div class="back-cover">
                         <div style="text-align: center; opacity: 0.7;">
-                            <div style="font-size: 3rem; margin-bottom: 1rem;">✦</div>
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">âœ¦</div>
                             <div>A Journey of Moments</div>
                         </div>
                     </div>
@@ -1670,8 +1649,8 @@
         <!-- TOOLBAR -->
         <div class="toolbar" id="toolbar">
             <div class="toolbar-group">
-                <button class="toolbar-btn active" data-mode="text" id="modeText">📝</button>
-                <button class="toolbar-btn" data-mode="draw" id="modeDraw">✏️</button>
+                <button class="toolbar-btn active" data-mode="text" id="modeText">ðŸ“</button>
+                <button class="toolbar-btn" data-mode="draw" id="modeDraw">âœï¸</button>
             </div>
             <div class="toolbar-separator"></div>
             <div class="toolbar-group" id="drawTools" style="display: none;">
@@ -1690,21 +1669,21 @@
             </div>
             <div class="toolbar-separator"></div>
             <div class="toolbar-group">
-                <button class="toolbar-btn" id="undoBtn" title="Undo">↶</button>
-                <button class="toolbar-btn" id="redoBtn" title="Redo">↷</button>
+                <button class="toolbar-btn" id="undoBtn" title="Undo">â†¶</button>
+                <button class="toolbar-btn" id="redoBtn" title="Redo">â†·</button>
             </div>
             <div class="toolbar-separator"></div>
             <div class="toolbar-group">
-                <button class="toolbar-btn" id="exportPngBtn">🖼️</button>
-                <button class="toolbar-btn" id="saveBtn">💾</button>
+                <button class="toolbar-btn" id="exportPngBtn">ðŸ–¼ï¸</button>
+                <button class="toolbar-btn" id="saveBtn">ðŸ’¾</button>
             </div>
         </div>
 
         <!-- LIBRARY VIEW -->
         <div id="libraryView">
             <div class="library-header">
-                <h2 class="library-title">📚 Your Library</h2>
-                <button class="library-close" id="libraryClose">✕</button>
+                <h2 class="library-title">ðŸ“š Your Library</h2>
+                <button class="library-close" id="libraryClose">âœ•</button>
             </div>
             <div class="library-content">
                 <div class="library-grid" id="libraryGrid"></div>
@@ -1722,7 +1701,7 @@
                         <div style="font-size: 1.3rem; font-weight: 700; letter-spacing: 2px; margin-bottom: 0.8rem; font-family: var(--font-serif);" id="previewEmboss">MEMENTO</div>
                         <div style="font-size: 0.7rem; opacity: 0.8; letter-spacing: 1px; font-family: var(--font-elegant);" id="previewSubtitle">My Diary</div>
                         <div style="margin-top: 1rem; opacity: 0.6; font-size: 0.8rem;">
-                            <div style="margin-top: 0.5rem;">✦</div>
+                            <div style="margin-top: 0.5rem;">âœ¦</div>
                         </div>
                     </div>
                 </div>
@@ -1982,7 +1961,7 @@
     <!-- IMPORT MODAL -->
     <div id="importModal" class="modal">
         <div class="modal-content">
-            <h2 class="modal-title">📂 Import Backup</h2>
+            <h2 class="modal-title">ðŸ“‚ Import Backup</h2>
             <input type="file" id="importFile" accept=".json" class="modal-input" placeholder="Choose file">
             <div class="modal-actions">
                 <button class="modal-btn modal-btn-secondary" id="importCancelBtn">Cancel</button>
@@ -2681,7 +2660,7 @@
                     this.setupBookCoverInteraction();
 
                     this.initialized = true;
-                    this.showStatus('Welcome to your sanctuary ✨', 2000);
+                    this.showStatus('Welcome to your sanctuary âœ¨', 2000);
                 } catch (err) {
                     console.error('Init error:', err);
                 }
@@ -2843,7 +2822,7 @@
                 if (returnBtn) returnBtn.classList.add('show');
 
                 window.audio.playCoverFlip();
-                this.showStatus('Welcome! ✨', 1000);
+                this.showStatus('Welcome! âœ¨', 1000);
             }
 
             closeCover() {
@@ -3071,7 +3050,7 @@
                     ]);
                     
                     document.getElementById('coverCustomizer').classList.remove('active');
-                    this.showStatus('Cover updated ✨', 1500);
+                    this.showStatus('Cover updated âœ¨', 1500);
                     window.audio.playSave();
                 });
 
@@ -3152,7 +3131,7 @@
                     await this.openPage(page.id);
                 }
                 this.renderPageList();
-                this.showStatus('✨ New page', 1200);
+                this.showStatus('âœ¨ New page', 1200);
                 window.audio.playSave();
             }
 
@@ -3201,7 +3180,7 @@
                     }
 
                     this.renderPageList();
-                    this.showStatus(`📖 Page ${this.currentPageIndex + 1}`, 1000);
+                    this.showStatus(`ðŸ“– Page ${this.currentPageIndex + 1}`, 1000);
                     this.resizeCanvas();
 
                     const wrapper = document.querySelector('.page-canvas-wrapper');
@@ -3227,7 +3206,7 @@
                     page.thumbnail = this.drawingEngine ? this.drawingEngine.getImageData(0.2) : '';
 
                     await this.storage.savePage(page);
-                    this.showStatus('💾 Saved', 800);
+                    this.showStatus('ðŸ’¾ Saved', 800);
                 } catch (err) {
                     console.error('Save error:', err);
                 }
@@ -3249,13 +3228,13 @@
                     if (colorControl) colorControl.style.display = 'flex';
                     if (sizeControl) sizeControl.style.display = 'flex';
                     if (canvas) canvas.style.cursor = 'crosshair';
-                    this.showStatus('✏️ Drawing mode', 800);
+                    this.showStatus('âœï¸ Drawing mode', 800);
                 } else {
                     if (drawTools) drawTools.style.display = 'none';
                     if (colorControl) colorControl.style.display = 'none';
                     if (sizeControl) sizeControl.style.display = 'none';
                     if (canvas) canvas.style.cursor = 'default';
-                    this.showStatus('📝 Typing mode', 800);
+                    this.showStatus('ðŸ“ Typing mode', 800);
                 }
             }
 
@@ -3287,7 +3266,7 @@
                     link.href = this.drawingEngine.getImageData(2);
                     link.download = `${this.coverText.toUpperCase()}-page-${this.currentPageIndex + 1}.png`;
                     link.click();
-                    this.showStatus('🖼️ PNG exported', 1200);
+                    this.showStatus('ðŸ–¼ï¸ PNG exported', 1200);
                     window.audio.playSave();
                 } catch (err) {
                     console.error('PNG export error:', err);
@@ -3301,7 +3280,7 @@
                         return;
                     }
 
-                    this.showStatus('📄 Generating PDF...');
+                    this.showStatus('ðŸ“„ Generating PDF...');
 
                     if (!window.jspdf) {
                         this.showStatus('Loading...');
@@ -3326,7 +3305,7 @@
                     }
 
                     pdf.save(`${this.coverText.toLowerCase()}-diary.pdf`);
-                    this.showStatus('📄 PDF exported', 1200);
+                    this.showStatus('ðŸ“„ PDF exported', 1200);
                     window.audio.playSave();
                 } catch (err) {
                     console.error('PDF export error:', err);
@@ -3342,7 +3321,7 @@
                     link.href = URL.createObjectURL(blob);
                     link.download = `${this.coverText.toLowerCase()}-backup-${Date.now()}.json`;
                     link.click();
-                    this.showStatus('💾 Backup exported', 1200);
+                    this.showStatus('ðŸ’¾ Backup exported', 1200);
                     window.audio.playSave();
                 } catch (err) {
                     console.error('JSON export error:', err);
@@ -3373,7 +3352,7 @@
                             this.renderPageList();
                             document.getElementById('importModal').classList.remove('active');
                             fileInput.value = '';
-                            this.showStatus('✓ Imported', 1200);
+                            this.showStatus('âœ“ Imported', 1200);
                             window.audio.playSave();
                         } catch (err) {
                             this.showStatus('Import failed');
