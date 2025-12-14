@@ -112,7 +112,7 @@
             animation: fadeInUp 0.8s ease-out 0.3s forwards;
             background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-dark) 100%);
             -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-text-fill-color: opaque;
         }
 
         .landing-subtitle {
@@ -308,6 +308,8 @@ background-position: center !important;
             font-family: var(--font-elegant);
             font-size: 1.2rem;
             letter-spacing: 2px;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: opaque;
             margin-top: 1.5rem;
             color: var(--gold-light);
             opacity: 0.95;
